@@ -621,7 +621,7 @@
 
     .logout-button {
       background: transparent;
-      color: var(--text-color);
+      color: #ffffff;
       border: none;
       border-radius: 8px;
       padding: 0.75rem 1.5rem;
@@ -629,8 +629,8 @@
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
-      box-shadow: 4px 4px 8px var(--shadow-dark),
-                  -4px -4px 8px var(--shadow-light);
+      //box-shadow: 4px 4px 8px var(--shadow-dark),
+      //            -4px -4px 8px var(--shadow-light);
     }
 
     .logout-button:hover {
@@ -742,7 +742,7 @@
       </div>
       <button id="loginButton" class="login-button">Login</button>
       <div id="loginError" class="login-error">Invalid username or password</div>
-      <div class="subtitle">GULF PETROCHEMICAL SERVICES LLC.</div>
+      <div class="subtitle">Gulf Petrochemical Services & Trading LLC.</div>
     </div>
   </div>
 
@@ -1096,6 +1096,11 @@
     let allData = [];
     let charts = {};
     
+    // Start loading data immediately when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      loadData();
+    });
+    
     // Login functionality
     const validCredentials = {
       username: '\x67\x70\x73\x6f\x6d\x61\x6e',
@@ -1175,8 +1180,11 @@
           updateResourceTables();
         }
       } else {
-        // If data isn't preloaded yet, load it now
-        loadData();
+        // If data isn't preloaded yet, show loading indicators
+        document.getElementById('summaryLoading').style.display = 'flex';
+        document.getElementById('reportsLoading').style.display = 'flex';
+        document.getElementById('statusLoading').style.display = 'flex';
+        document.getElementById('resourceLoading').style.display = 'flex';
       }
     }
     
@@ -1212,57 +1220,58 @@
     }
     
     function loadData() {
-      document.getElementById('summaryLoading').style.display = 'flex';
-      document.getElementById('reportsLoading').style.display = 'flex';
-      document.getElementById('statusLoading').style.display = 'flex';
-      document.getElementById('resourceLoading').style.display = 'flex';
-      
       fetch(SHEET_URL)
         .then(response => response.text())
         .then(csvData => {
           allData = parseCSV(csvData);
           
-          document.getElementById('summaryLoading').style.display = 'none';
-          document.getElementById('summaryContent').style.display = 'block';
-          document.getElementById('reportsLoading').style.display = 'none';
-          document.getElementById('reportsContent').style.display = 'block';
-          document.getElementById('statusLoading').style.display = 'none';
-          document.getElementById('statusContent').style.display = 'block';
-          document.getElementById('resourceLoading').style.display = 'none';
-          document.getElementById('resourceContent').style.display = 'block';
-          
-          applyFilters();
-          if (document.getElementById('status').classList.contains('active')) {
-            updateStatusTable();
-          }
-          if (document.getElementById('summary').classList.contains('active')) {
-            updateSummaryCharts();
-          }
-          if (document.getElementById('resource').classList.contains('active')) {
-            updateResourceTables();
+          // If user is already logged in (unlikely but possible), update the dashboard
+          if (document.getElementById('dashboardContainer').style.display === 'block') {
+            document.getElementById('summaryLoading').style.display = 'none';
+            document.getElementById('summaryContent').style.display = 'block';
+            document.getElementById('reportsLoading').style.display = 'none';
+            document.getElementById('reportsContent').style.display = 'block';
+            document.getElementById('statusLoading').style.display = 'none';
+            document.getElementById('statusContent').style.display = 'block';
+            document.getElementById('resourceLoading').style.display = 'none';
+            document.getElementById('resourceContent').style.display = 'block';
+            
+            applyFilters();
+            if (document.getElementById('status').classList.contains('active')) {
+              updateStatusTable();
+            }
+            if (document.getElementById('summary').classList.contains('active')) {
+              updateSummaryCharts();
+            }
+            if (document.getElementById('resource').classList.contains('active')) {
+              updateResourceTables();
+            }
           }
         })
         .catch(error => {
           console.error('Error loading data:', error);
-          document.getElementById('reportContainer').innerHTML = 
-            '<p class="no-data">Error loading data. Please try again later.</p>';
-          document.getElementById('statusTableBody').innerHTML = 
-            '<tr><td colspan="7" class="no-data">Error loading data. Please try again later.</td></tr>';
-          document.getElementById('manpowerTableBody').innerHTML = 
-            '<tr><td colspan="6" class="no-data">Error loading data. Please try again later.</td></tr>';
-          document.getElementById('equipmentTableBody').innerHTML = 
-            '<tr><td colspan="6" class="no-data">Error loading data. Please try again later.</td></tr>';
-          document.getElementById('notFoundTableBody').innerHTML = 
-            '<tr><td colspan="6" class="no-data">Error loading data. Please try again later.</td></tr>';
-          
-          document.getElementById('summaryLoading').style.display = 'none';
-          document.getElementById('reportsLoading').style.display = 'none';
-          document.getElementById('statusLoading').style.display = 'none';
-          document.getElementById('resourceLoading').style.display = 'none';
-          document.getElementById('summaryContent').style.display = 'block';
-          document.getElementById('reportsContent').style.display = 'block';
-          document.getElementById('statusContent').style.display = 'block';
-          document.getElementById('resourceContent').style.display = 'block';
+          // If user is logged in, show error messages
+          if (document.getElementById('dashboardContainer').style.display === 'block') {
+            document.getElementById('reportContainer').innerHTML = 
+              '<p class="no-data">Error loading data. Please try again later.</p>';
+            document.getElementById('statusTableBody').innerHTML = 
+              '<tr><td colspan="7" class="no-data">Error loading data. Please try again later.</td></tr>';
+            document.getElementById('manpowerTableBody').innerHTML = 
+              '<tr><td colspan="6" class="no-data">Error loading data. Please try again later.</td></tr>';
+            document.getElementById('equipmentTableBody').innerHTML = 
+              '<tr><td colspan="6" class="no-data">Error loading data. Please try again later.</td></tr>';
+            document.getElementById('notFoundTableBody').innerHTML = 
+              '<tr><td colspan="6" class="no-data">Error loading data. Please try again later.</td></tr>';
+            
+            document.getElementById('summaryLoading').style.display = 'none';
+            document.getElementById('reportsLoading').style.display = 'none';
+            document.getElementById('statusLoading').style.display = 'none';
+            document.getElementById('resourceLoading').style.display = 'none';
+            document.getElementById('summaryContent').style.display = 'block';
+            document.getElementById('reportsContent').style.display = 'block';
+            document.getElementById('statusContent').style.display = 'block';
+            document.getElementById('resourceContent').style.display = 'block';
+          }
         });
     }
     
