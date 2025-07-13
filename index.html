@@ -346,6 +346,7 @@
       display: none;
       padding: 1.5rem;
       animation: fadeIn 0.3s ease;
+      width: 100%;
     }
 
     @keyframes fadeIn {
@@ -543,7 +544,7 @@
 
     .chart-container {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
@@ -554,6 +555,7 @@
       padding: 1rem;
       box-shadow: 6px 6px 12px var(--shadow-dark),
                   -6px -6px 12px var(--shadow-light);
+      width: 100%;
     }
 
     .chart-title {
@@ -562,12 +564,6 @@
       margin-bottom: 0.8rem;
       color: var(--dark-color);
       text-align: center;
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: 3fr 2fr;
-      gap: 1rem;
     }
 
     .data-table {
@@ -712,9 +708,10 @@
       background-color: var(--card-bg);
       border-radius: 8px;
       padding: 1rem;
-      margin: 1rem;
+      margin: 1rem 0;
       box-shadow: 4px 4px 8px var(--shadow-dark),
                   -6px -6px 12px var(--shadow-light);
+      width: 100%;
     }
 
     .details-card h3 {
@@ -745,12 +742,20 @@
                   inset -4px -4px 8px var(--shadow-light);
     }
 
+    @media (min-width: 992px) {
+      .chart-container {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .summary-grid {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 1rem;
+      }
+    }
+
     @media (max-width: 1200px) {
       .summary-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .chart-container {
         grid-template-columns: 1fr;
       }
     }
@@ -915,14 +920,16 @@
       <div id="summaryContent" style="display: none;">
         <div class="summary-grid">
           <div>
-            <div class="chart-card">
-              <div class="chart-title">Daily Crew Allocation by Area</div>
-              <canvas id="crewAllocationChart"></canvas>
-            </div>
-            
-            <div class="chart-card">
-              <div class="chart-title">Crew Size Trend by Area</div>
-              <canvas id="crewTrendChart"></canvas>
+            <div class="chart-container">
+              <div class="chart-card">
+                <div class="chart-title">Daily Crew Allocation by Area</div>
+                <canvas id="crewAllocationChart"></canvas>
+              </div>
+              
+              <div class="chart-card">
+                <div class="chart-title">Crew Size Trend by Area</div>
+                <canvas id="crewTrendChart"></canvas>
+              </div>
             </div>
 
             <div class="chart-card">
