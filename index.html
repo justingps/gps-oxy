@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GPS Dashboard</title>
+  <title>GPS</title>
   <link rel="icon" href="https://justingps.github.io/dpr/logo.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <style>
-    /* New Login Page Styles */
+    /* Login Page Styles from Second Code */
     :root {
       --primary-blue: #003366;
       --secondary-blue: #0066cc;
@@ -27,23 +26,7 @@
       --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Roboto', sans-serif;
-      min-height: 100vh;
-      color: var(--dark-gray);
-      line-height: 1.5;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
+    /* Login Container Styles */
     #particles-js {
       position: fixed;
       top: 0;
@@ -59,10 +42,10 @@
       width: 100%;
       max-width: 440px;
       padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     .login-box {
@@ -74,8 +57,6 @@
       overflow: hidden;
       border-top: 4px solid var(--accent-orange);
       backdrop-filter: blur(2px);
-      width: 100%;
-      margin: 20px;
     }
 
     .company-logo {
@@ -239,7 +220,7 @@
       }
     }
 
-    /* Existing Dashboard Styles */
+    /* Original Dashboard Styles Below */
     :root {
       --primary-color: #2563eb;
       --secondary-color: #1e3a8a;
@@ -259,6 +240,19 @@
       --shadow-dark: #b0b7c3;
       --neumo-light: #f3f4f6;
       --neumo-dark: #d1d5db;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.5;
     }
 
     .container {
@@ -346,7 +340,6 @@
       display: none;
       padding: 1.5rem;
       animation: fadeIn 0.3s ease;
-      width: 100%;
     }
 
     @keyframes fadeIn {
@@ -544,7 +537,7 @@
 
     .chart-container {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
@@ -555,7 +548,6 @@
       padding: 1rem;
       box-shadow: 6px 6px 12px var(--shadow-dark),
                   -6px -6px 12px var(--shadow-light);
-      width: 100%;
     }
 
     .chart-title {
@@ -564,6 +556,12 @@
       margin-bottom: 0.8rem;
       color: var(--dark-color);
       text-align: center;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 1rem;
     }
 
     .data-table {
@@ -708,10 +706,9 @@
       background-color: var(--card-bg);
       border-radius: 8px;
       padding: 1rem;
-      margin: 1rem 0;
+      margin: 1rem;
       box-shadow: 4px 4px 8px var(--shadow-dark),
                   -6px -6px 12px var(--shadow-light);
-      width: 100%;
     }
 
     .details-card h3 {
@@ -742,20 +739,12 @@
                   inset -4px -4px 8px var(--shadow-light);
     }
 
-    @media (min-width: 992px) {
-      .chart-container {
-        grid-template-columns: 1fr 1fr;
-      }
-      
-      .summary-grid {
-        display: grid;
-        grid-template-columns: 3fr 2fr;
-        gap: 1rem;
-      }
-    }
-
     @media (max-width: 1200px) {
       .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-container {
         grid-template-columns: 1fr;
       }
     }
@@ -830,7 +819,7 @@
 <body>
   <div id="particles-js"></div>
   
-  <!-- New Login Page -->
+  <!-- New Professional Login Page -->
   <div id="loginContainer" class="login-container">
     <div class="login-box">
       <div class="company-logo">
@@ -880,7 +869,7 @@
   </div>
 
   <!-- Dashboard Container (hidden initially) -->
-  <div class="container" id="dashboardContainer" style="display: none;">
+  <div class="container" id="dashboardContainer">
     <div class="header">
       <div class="logo-container">
         <img src="https://justingps.github.io/dpr/logo.png" alt="Company Logo" class="logo">
@@ -920,16 +909,14 @@
       <div id="summaryContent" style="display: none;">
         <div class="summary-grid">
           <div>
-            <div class="chart-container">
-              <div class="chart-card">
-                <div class="chart-title">Daily Crew Allocation by Area</div>
-                <canvas id="crewAllocationChart"></canvas>
-              </div>
-              
-              <div class="chart-card">
-                <div class="chart-title">Crew Size Trend by Area</div>
-                <canvas id="crewTrendChart"></canvas>
-              </div>
+            <div class="chart-card">
+              <div class="chart-title">Daily Crew Allocation by Area</div>
+              <canvas id="crewAllocationChart"></canvas>
+            </div>
+            
+            <div class="chart-card">
+              <div class="chart-title">Crew Size Trend by Area</div>
+              <canvas id="crewTrendChart"></canvas>
             </div>
 
             <div class="chart-card">
@@ -1186,71 +1173,44 @@
   </div>
 
   <script>
-    // Initialize particles.js with professional configuration
+    // Initialize particles.js
     particlesJS('particles-js', {
       particles: {
-        number: { 
-          value: 80, 
-          density: { 
-            enable: true, 
-            value_area: 800 
-          } 
-        },
-        color: { 
-          value: "#ffffff" 
-        },
-        shape: { 
-          type: "circle" 
-        },
-        opacity: {
-          value: 0.5,
-          random: true
-        },
-        size: {
-          value: 3,
-          random: true
-        },
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: '#ffffff' },
+        shape: { type: 'circle', stroke: { width: 0, color: '#000000' } },
+        opacity: { value: 0.5, random: false },
+        size: { value: 3, random: true },
         line_linked: {
           enable: true,
           distance: 150,
-          color: "#ffffff",
-          opacity: 0.2,
+          color: '#ffffff',
+          opacity: 0.4,
           width: 1
         },
         move: {
           enable: true,
-          speed: 1,
-          direction: "none",
-          random: true,
+          speed: 2,
+          direction: 'none',
+          random: false,
           straight: false,
-          out_mode: "out",
+          out_mode: 'out',
           bounce: false
         }
       },
       interactivity: {
-        detect_on: "canvas",
+        detect_on: 'canvas',
         events: {
-          onhover: {
-            enable: true,
-            mode: "grab"
-          },
-          onclick: {
-            enable: true,
-            mode: "push"
-          }
+          onhover: { enable: true, mode: 'grab' },
+          onclick: { enable: true, mode: 'push' },
+          resize: true
         },
         modes: {
-          grab: {
-            distance: 140,
-            line_linked: {
-              opacity: 0.3
-            }
-          },
-          push: {
-            particles_nb: 2
-          }
+          grab: { distance: 140, line_linked: { opacity: 1 } },
+          push: { particles_nb: 4 }
         }
-      }
+      },
+      retina_detect: true
     });
 
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRMvKP4HfM5zZpM3RjdpPcX0DZA3yWpGhXt_lqpzblpbIQW7vcJswPPm8gMdmVZ366FCUwZGLCsF1fb/pub?gid=0&single=true&output=csv';
