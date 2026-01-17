@@ -1271,7 +1271,7 @@
       const yesterday = new Date(today);
       yesterday.setDate(today.getDate() - 1);
       const oneWeekAgo = new Date(yesterday);
-      oneWeekAgo.setDate(yesterday.getDate() - 20); // One week range ending yesterday
+      oneWeekAgo.setDate(yesterday.getDate() - 6); // One week range ending yesterday
       
       document.getElementById('reportDate').valueAsDate = yesterday;
       document.getElementById('statusDate').valueAsDate = yesterday;
