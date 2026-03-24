@@ -840,6 +840,20 @@ option { background:var(--surface2); color:var(--text); }
         <div class="section-label">Area Breakdown</div>
         <div class="insight-grid" id="kpi-area-rows"></div>
 
+        <div class="section-label">Daily Operations Summary</div>
+        <div class="table-wrap">
+          <div class="table-header">
+            <div class="table-title">Day-by-Day Breakdown</div>
+            <div class="table-badge" id="kpi-day-badge">—</div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead><tr><th>Date</th><th>Active Areas</th><th>Foremen</th><th>Total Crew</th><th>Projects</th><th>Manpower</th><th>Equipment</th><th>Status</th></tr></thead>
+              <tbody id="kpi-day-body"></tbody>
+            </table>
+          </div>
+        </div> 
+         
         <div class="section-label">Top Performing Foremen</div>
         <div class="table-wrap">
           <div class="table-header">
@@ -854,19 +868,6 @@ option { background:var(--surface2); color:var(--text); }
           </div>
         </div>
 
-        <div class="section-label">Daily Operations Summary</div>
-        <div class="table-wrap">
-          <div class="table-header">
-            <div class="table-title">Day-by-Day Breakdown</div>
-            <div class="table-badge" id="kpi-day-badge">—</div>
-          </div>
-          <div style="overflow-x:auto">
-            <table class="data-table">
-              <thead><tr><th>Date</th><th>Active Areas</th><th>Foremen</th><th>Total Crew</th><th>Projects</th><th>Manpower</th><th>Equipment</th><th>Status</th></tr></thead>
-              <tbody id="kpi-day-body"></tbody>
-            </table>
-          </div>
-        </div>
       </div>
     </div>
 
