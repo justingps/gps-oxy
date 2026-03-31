@@ -570,6 +570,7 @@ window.addEventListener('scroll', () => document.getElementById('back-to-top').c
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRY6oM4ZvJDd8-yDRTm4rimO9hG4tMEVB0NaD7gt5_xiW09U3sSZuOePGoRAVlgUkocC5VdZeZdLU7b/pub?gid=0&single=true&output=csv';
 const CREDS = { u:'\x67\x70\x73\x6f\x6d\x61\x6e', p:'\x67\x70\x73\x6f\x6d\x61\x6e' };
 const CAMP_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxGg9Po53AcOewECTemCdx6kWgDbS8zNjjS8fjuSBbKtTHloK3tN2B8r5AWYRw0cFJw/exec';
+const LOGO_URL = 'https://justingps.github.io/dpr/logo.png';
 
 let DATA = [], charts = {}, dataReady = false;
 let lastStatusGroups = [], lastStatusDate = null;
@@ -909,30 +910,59 @@ function renderReports(){
 }
 
 /* ══════════════════════════════════════════════════════════════
-   PDF GENERATION — FIXED & ENHANCED
-   Root cause: the original code only rendered meta fields and
-   never looped through progress lines or resource rows before
-   saving. The new version renders all sections with correct
-   page-break / y-position tracking and adds a signature block.
+   LOGO FETCH HELPER
+   Fetches the GPS logo once and caches it as a base64 data URL
+   for embedding in PDF headers.
+══════════════════════════════════════════════════════════════ */
+let _cachedLogoB64 = null;
+async function fetchLogoBase64() {
+  if (_cachedLogoB64) return _cachedLogoB64;
+  try {
+    const resp = await fetch(LOGO_URL);
+    const blob = await resp.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => { _cachedLogoB64 = reader.result; resolve(_cachedLogoB64); };
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    console.warn('Logo fetch failed, falling back to text placeholder:', e);
+    return null;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PDF GENERATION
+   Changes from previous version:
+   1. Company logo loaded as base64 and placed in every page header
+      at a fixed 36×36 pt size — replaces the "GPS" text placeholder.
+   2. Approval & Signatures block rendered ONLY ONCE per report,
+      on the very last page of that report, just above the footer.
+      It is never drawn on continuation pages.
 ══════════════════════════════════════════════════════════════ */
 async function downloadReportsPDF() {
-  if(!lastRepGroups.length){ alert('No reports to export.'); return; }
-  const overlay    = document.getElementById('pdf-overlay');
-  const progressTxt= document.getElementById('pdf-progress-text');
+  if (!lastRepGroups.length) { alert('No reports to export.'); return; }
+  const overlay     = document.getElementById('pdf-overlay');
+  const progressTxt = document.getElementById('pdf-progress-text');
   overlay.classList.add('visible');
 
   try {
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ orientation:'portrait', unit:'pt', format:'a4' });
-    const pageW  = pdf.internal.pageSize.getWidth();
-    const pageH  = pdf.internal.pageSize.getHeight();
-    const M      = 36;          // left/right margin
-    const inner  = pageW - M*2; // usable width
-    const dateVal= getDate('r-date');
-    const dateStr= dateVal ? fmtDisplay(dateVal) : '—';
-    const genDate= new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    /* ── Pre-fetch logo ── */
+    progressTxt.textContent = 'Loading company logo…';
+    const logoB64 = await fetchLogoBase64();
 
-    /* ── colour helpers (pure RGB, no CSS vars) ── */
+    const { jsPDF } = window.jspdf;
+    const pdf   = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const M     = 36;          // left / right margin
+    const inner = pageW - M * 2;
+
+    const dateVal = getDate('r-date');
+    const dateStr = dateVal ? fmtDisplay(dateVal) : '—';
+    const genDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+    /* ── Colour palette (pure RGB, no CSS vars) ── */
     const C = {
       accent  : [224, 123,  57],
       text    : [ 26,  34,  54],
@@ -947,77 +977,138 @@ async function downloadReportsPDF() {
       line    : [224, 226, 232],
     };
 
-    /* ── low-level helpers ── */
+    /* ── Low-level helpers ── */
     const setFill   = c => pdf.setFillColor(...c);
     const setDraw   = c => pdf.setDrawColor(...c);
     const setTxtClr = c => pdf.setTextColor(...c);
-    const bold      = s => pdf.setFont('helvetica','bold');
-    const normal    = s => pdf.setFont('helvetica','normal');
+    const bold      = () => pdf.setFont('helvetica', 'bold');
+    const normal    = () => pdf.setFont('helvetica', 'normal');
 
-    function checkPage(y, needed, firstPageHeaderH) {
-      /* Returns updated y, adding a new page if needed. */
-      const bottomGuard = pageH - 20;
+    /* ── Logo size constants ── */
+    const LOGO_SIZE = 36; // pt — standardised logo square
+
+    /* ─────────────────────────────────────────────────────────
+       drawPageHeader
+       Renders the full-width header band on any page.
+       reportNo  : human-readable index (1-based)
+       isContinued : true → shows "(continued)" label
+       Returns the y coordinate immediately below the header.
+    ───────────────────────────────────────────────────────── */
+    function drawPageHeader(reportNo, wi, isContinued) {
+      const headerH = 72;
+
+      // Background band
+      setFill(C.surface);
+      pdf.rect(0, 0, pageW, headerH, 'F');
+
+      // Left accent bar
+      setFill(C.accent);
+      pdf.rect(0, 0, 4, headerH, 'F');
+
+      // ── LOGO (image or fallback text) ──
+      const logoX = M + 4;
+      const logoY = (headerH - LOGO_SIZE) / 2;  // vertically centred in band
+      if (logoB64) {
+        // Draw white rounded background behind logo for consistency
+        setFill([255, 255, 255]);
+        setDraw(C.border);
+        pdf.setLineWidth(0.5);
+        pdf.roundedRect(logoX, logoY, LOGO_SIZE, LOGO_SIZE, 4, 4, 'FD');
+        // Place the actual logo image with 3 pt padding inside the box
+        const pad = 3;
+        pdf.addImage(logoB64, 'PNG', logoX + pad, logoY + pad, LOGO_SIZE - pad * 2, LOGO_SIZE - pad * 2);
+      } else {
+        // Fallback: coloured box with "GPS" text
+        setFill(C.surface2);
+        setDraw(C.border);
+        pdf.setLineWidth(0.5);
+        pdf.roundedRect(logoX, logoY, LOGO_SIZE, LOGO_SIZE, 4, 4, 'FD');
+        bold(); pdf.setFontSize(9); setTxtClr(C.accent);
+        pdf.text('GPS', logoX + LOGO_SIZE / 2, logoY + LOGO_SIZE / 2 + 3, { align: 'center' });
+      }
+
+      // ── Company name & sub-text ──
+      const textX = logoX + LOGO_SIZE + 10;
+      bold(); pdf.setFontSize(13); setTxtClr(C.text);
+      pdf.text('Gulf Petrochemical Services', textX, 28);
+      normal(); pdf.setFontSize(7.5); setTxtClr(C.sub);
+      pdf.text('OXY OMAN · CONTRACT #24000110790', textX, 40);
+      if (isContinued) {
+        pdf.setFontSize(7); setTxtClr(C.dim);
+        pdf.text(`Work Report #${reportNo}  (continued)`, textX, 52);
+      }
+
+      // ── Report badge (top-right) ──
+      const badgeLabel = `Work Report #${reportNo}`;
+      bold(); pdf.setFontSize(9); setTxtClr(C.white);
+      const bw = pdf.getTextWidth(badgeLabel) + 22;
+      const bx = pageW - M - bw;
+      setFill(C.accent);
+      pdf.roundedRect(bx, 10, bw, 19, 3, 3, 'F');
+      pdf.text(badgeLabel, bx + bw / 2, 23, { align: 'center' });
+
+      // WI & date (below badge)
+      normal(); pdf.setFontSize(7.5); setTxtClr(C.sub);
+      pdf.text(`WI: ${wi}`, pageW - M, 40, { align: 'right' });
+      pdf.text(`Date: ${dateStr}`, pageW - M, 51, { align: 'right' });
+
+      // Separator line
+      setDraw(C.border); pdf.setLineWidth(0.5);
+      pdf.line(0, headerH, pageW, headerH);
+
+      return headerH + 10; // y after header
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       checkPage
+       If the next block (height `needed`) won't fit on the
+       current page, adds a new page and redraws the header.
+       Returns updated y.
+    ───────────────────────────────────────────────────────── */
+    function checkPage(y, needed, reportNo, wi) {
+      const bottomGuard = pageH - 24; // keep clear of footer stripe
       if (y + needed > bottomGuard) {
         pdf.addPage();
-        y = drawContinuedHeader(firstPageHeaderH);
+        drawPageFooter(); // footer on the page we just left (rare but safe)
+        y = drawPageHeader(reportNo, wi, true);
       }
       return y;
     }
 
-    function drawContinuedHeader(reportNo, pageLabel) {
-      /* Minimal sticky header for continuation pages */
-      setFill(C.surface); pdf.rect(0,0,pageW,44,'F');
-      setFill(C.accent);  pdf.rect(0,0,4,44,'F');
-      setDraw(C.border);  pdf.setLineWidth(0.5); pdf.line(0,44,pageW,44);
-      bold(); pdf.setFontSize(9); setTxtClr(C.accent);
-      pdf.text(`Work Report #${reportNo}  (continued)`, M+6, 19);
-      normal(); pdf.setFontSize(7.5); setTxtClr(C.sub);
-      pdf.text(`Gulf Petrochemical Services · ${dateStr}`, M+6, 33);
-      setTxtClr(C.dim); pdf.text(pageLabel||'', pageW-M, 33, {align:'right'});
-      return 56; // y after header
-    }
-
-    /* ── section title bar ── */
+    /* ── Section title bar ── */
     function sectionBar(y, title) {
       setFill(C.surface2); pdf.rect(M, y, inner, 18, 'F');
-      setDraw(C.accent);   pdf.setLineWidth(2); pdf.line(M, y, M, y+18);
+      setDraw(C.accent);   pdf.setLineWidth(2); pdf.line(M, y, M, y + 18);
       pdf.setLineWidth(0.5);
       bold(); pdf.setFontSize(7); setTxtClr(C.sub);
-      pdf.text(title.toUpperCase(), M+8, y+12);
+      pdf.text(title.toUpperCase(), M + 8, y + 12);
       normal();
-      return y+18;
+      return y + 18;
     }
 
-    /* ── table row (alternating) ── */
+    /* ── Table row (alternating shading) ── */
     function tableRow(y, cells, widths, rowH, isHeader, isAlt) {
-      if (isHeader) { setFill(C.surface2); }
-      else if (isAlt) { setFill([248,250,253]); }
-      else { setFill(C.white); }
+      if (isHeader)      { setFill(C.surface2); }
+      else if (isAlt)    { setFill([248, 250, 253]); }
+      else               { setFill(C.white); }
       pdf.rect(M, y, inner, rowH, 'F');
 
-      // bottom border
       setDraw(C.line); pdf.setLineWidth(0.3);
-      pdf.line(M, y+rowH, M+inner, y+rowH);
+      pdf.line(M, y + rowH, M + inner, y + rowH);
 
       let x = M;
       cells.forEach((cell, ci) => {
         const w = widths[ci];
         if (isHeader) { bold(); pdf.setFontSize(6.5); setTxtClr(C.sub); }
         else          { normal(); pdf.setFontSize(7.5); setTxtClr(C.text); }
-        const lines = pdf.splitTextToSize(String(cell||'—'), w-8);
-        pdf.text(lines[0], x+4, y + rowH/2 + (isHeader?2:2.5));
+        const lines = pdf.splitTextToSize(String(cell || '—'), w - 8);
+        pdf.text(lines[0], x + 4, y + rowH / 2 + (isHeader ? 2 : 2.5));
         x += w;
       });
       return y + rowH;
     }
 
-    /* ── outer border around a section ── */
-    function outerBorder(y0, y1) {
-      setDraw(C.border); pdf.setLineWidth(0.5);
-      pdf.rect(M, y0, inner, y1-y0);
-    }
-
-    /* ── meta grid (2 columns of key/value pairs) ── */
+    /* ── Meta grid (3-column key/value pairs) ── */
     function metaGrid(y, items) {
       const cols   = 3;
       const cellW  = inner / cols;
@@ -1025,149 +1116,128 @@ async function downloadReportsPDF() {
       const rows   = Math.ceil(items.length / cols);
       const totalH = rows * cellH;
 
-      for (let ri=0; ri<rows; ri++) {
-        for (let ci=0; ci<cols; ci++) {
-          const idx = ri*cols + ci;
+      for (let ri = 0; ri < rows; ri++) {
+        for (let ci = 0; ci < cols; ci++) {
+          const idx = ri * cols + ci;
           if (idx >= items.length) continue;
-          const cx = M + ci*cellW;
-          const cy = y + ri*cellH;
-          setFill(ci%2===0 ? C.surface : C.surface2);
+          const cx = M + ci * cellW;
+          const cy = y + ri * cellH;
+          setFill(ci % 2 === 0 ? C.surface : C.surface2);
           setDraw(C.border); pdf.setLineWidth(0.3);
           pdf.rect(cx, cy, cellW, cellH, 'FD');
-          // label
           bold(); pdf.setFontSize(6); setTxtClr(C.dim);
-          pdf.text(String(items[idx][0]).toUpperCase(), cx+5, cy+10);
-          // value
+          pdf.text(String(items[idx][0]).toUpperCase(), cx + 5, cy + 10);
           normal(); pdf.setFontSize(8); setTxtClr(C.text);
-          const val = pdf.splitTextToSize(String(items[idx][1]||'—'), cellW-10);
-          pdf.text(val[0], cx+5, cy+22);
+          const val = pdf.splitTextToSize(String(items[idx][1] || '—'), cellW - 10);
+          pdf.text(val[0], cx + 5, cy + 22);
         }
       }
       return y + totalH;
     }
 
-    /* ── description box ── */
+    /* ── Description box ── */
     function descBox(y, text) {
       if (!text) return y;
       normal(); pdf.setFontSize(8); setTxtClr(C.sub);
-      const lines = pdf.splitTextToSize(text, inner-16);
+      const lines = pdf.splitTextToSize(text, inner - 16);
       const boxH  = lines.length * 11 + 14;
-      setFill([250,251,254]); setDraw(C.border); pdf.setLineWidth(0.3);
+      setFill([250, 251, 254]); setDraw(C.border); pdf.setLineWidth(0.3);
       pdf.rect(M, y, inner, boxH, 'FD');
       setDraw(C.accent); pdf.setLineWidth(2);
-      pdf.line(M, y, M, y+boxH);
+      pdf.line(M, y, M, y + boxH);
       pdf.setLineWidth(0.3);
-      pdf.text(lines, M+10, y+11);
+      pdf.text(lines, M + 10, y + 11);
       return y + boxH + 6;
     }
 
-    /* ── approval/signature section ── */
+    /* ─────────────────────────────────────────────────────────
+       signatureSection
+       Draws the Approval & Signatures block.
+       Should be called ONCE per report, on its final page,
+       with enough vertical space already verified by the caller.
+       Returns y after the block.
+    ───────────────────────────────────────────────────────── */
     function signatureSection(y) {
       const sigBoxH = 88;
-      const needed  = sigBoxH + 22;
-
-      // title bar
       y = sectionBar(y, 'Approval & Signatures');
 
       setDraw(C.border); pdf.setLineWidth(0.5);
-      pdf.rect(M, y, inner, sigBoxH, 'S'); // outer frame
+      pdf.rect(M, y, inner, sigBoxH, 'S');
 
       const colW = inner / 3;
       const roles = [
-        { title: 'Site Engineer',         color: C.green },
-        { title: 'Site Manager',          color: C.blue  },
-        { title: 'Client Representative', color: C.accent},
+        { title: 'Site Engineer',         color: C.green  },
+        { title: 'Site Manager',          color: C.blue   },
+        { title: 'Client Representative', color: C.accent },
       ];
 
       roles.forEach((role, ci) => {
         const cx = M + ci * colW;
-        // vertical divider (except first)
         if (ci > 0) {
           setDraw(C.border); pdf.setLineWidth(0.4);
           pdf.line(cx, y, cx, y + sigBoxH);
         }
-        // role header strip
+        // Role header strip
         pdf.setFillColor(...role.color);
         pdf.rect(cx, y, colW, 14, 'F');
         bold(); pdf.setFontSize(7.5); setTxtClr(C.white);
-        pdf.text(role.title, cx + colW/2, y+10, {align:'center'});
+        pdf.text(role.title, cx + colW / 2, y + 10, { align: 'center' });
 
-        // fields
-        const fieldY  = y + 22;
-        const fieldGap= 18;
-        const fields  = ['Name:', 'Designation:', 'Signature:', 'Date:'];
+        // Fields
+        const fieldY   = y + 22;
+        const fieldGap = 18;
+        const fields   = ['Name:', 'Designation:', 'Signature:', 'Date:'];
         fields.forEach((lbl, fi) => {
           normal(); pdf.setFontSize(7); setTxtClr(C.sub);
-          pdf.text(lbl, cx+6, fieldY + fi*fieldGap);
+          pdf.text(lbl, cx + 6, fieldY + fi * fieldGap);
           setDraw(C.line); pdf.setLineWidth(0.4);
-          pdf.line(cx + 38, fieldY + fi*fieldGap + 1, cx + colW - 6, fieldY + fi*fieldGap + 1);
+          pdf.line(cx + 38, fieldY + fi * fieldGap + 1, cx + colW - 6, fieldY + fi * fieldGap + 1);
         });
       });
 
       return y + sigBoxH + 10;
     }
 
-    /* ══ MAIN LOOP — one report per page ══ */
-    const totalPages = lastRepGroups.length;
+    /* ── Page footer stripe (drawn at the very bottom) ── */
+    function drawPageFooter(pageLabel) {
+      const pNum = pdf.internal.getCurrentPageInfo().pageNumber;
+      setFill(C.accent);
+      pdf.rect(0, pageH - 5, pageW, 5, 'F');
+      setDraw(C.border); pdf.setLineWidth(0.3);
+      pdf.line(0, pageH - 18, pageW, pageH - 18);
+      normal(); pdf.setFontSize(6.5); setTxtClr(C.dim);
+      pdf.text(
+        `Gulf Petrochemical Services LLC · Generated ${genDate}${pageLabel ? ' · ' + pageLabel : ''}`,
+        pageW / 2, pageH - 8, { align: 'center' }
+      );
+    }
 
-    for (let i = 0; i < totalPages; i++) {
+    /* ══ MAIN LOOP — one PDF report per work group ══ */
+    const totalReports = lastRepGroups.length;
+
+    for (let i = 0; i < totalReports; i++) {
       const g = lastRepGroups[i];
-      progressTxt.textContent = `Rendering report ${i+1} of ${totalPages}…`;
+      progressTxt.textContent = `Rendering report ${i + 1} of ${totalReports}…`;
       if (i > 0) pdf.addPage();
 
-      // ── PAGE HEADER ──────────────────────────────────────────
-      setFill(C.surface); pdf.rect(0, 0, pageW, 72, 'F');
-      setFill(C.accent);  pdf.rect(0, 0, 4, 72, 'F');
+      /* Track which PDF page this report started on so we can
+         later determine how many pages it spans (for footer labels). */
+      const reportStartPage = pdf.internal.getCurrentPageInfo().pageNumber;
 
-      // logo placeholder
-      setFill(C.surface2); setDraw(C.border); pdf.setLineWidth(0.5);
-      pdf.roundedRect(M+4, 12, 36, 36, 3, 3, 'FD');
-      bold(); pdf.setFontSize(7); setTxtClr(C.accent);
-      pdf.text('GPS', M+22, 34, {align:'center'});
+      // Draw first-page header (not a continuation)
+      let y = drawPageHeader(i + 1, g.wi, false);
 
-      // company name
-      bold(); pdf.setFontSize(14); setTxtClr(C.text);
-      pdf.text('Gulf Petrochemical Services', M+48, 27);
-      normal(); pdf.setFontSize(7.5); setTxtClr(C.sub);
-      pdf.text('OXY OMAN · CONTRACT #24000110790', M+48, 39);
-
-      // report badge (top right)
-      const badge = `Work Report #${i+1}`;
-      bold(); pdf.setFontSize(9); setTxtClr(C.white);
-      const bw = pdf.getTextWidth(badge) + 22;
-      const bx = pageW - M - bw;
-      setFill(C.accent); pdf.roundedRect(bx, 10, bw, 19, 3, 3, 'F');
-      pdf.text(badge, bx + bw/2, 23, {align:'center'});
-
-      // WI number under badge
-      normal(); pdf.setFontSize(7.5); setTxtClr(C.sub);
-      pdf.text(`WI: ${g.wi}`, pageW-M, 40, {align:'right'});
-      pdf.text(`Date: ${dateStr}`, pageW-M, 51, {align:'right'});
-
-      // page number
-      setTxtClr(C.dim); pdf.setFontSize(7);
-      pdf.text(`Page ${i+1} of ${totalPages}`, pageW-M, 65, {align:'right'});
-
-      // separator line
-      setDraw(C.border); pdf.setLineWidth(0.5);
-      pdf.line(0, 72, pageW, 72);
-
-      let y = 82;
-      const pLabel = `Page ${i+1} of ${totalPages}`;
-
-      // ── WORK DESCRIPTION ─────────────────────────────────────
+      /* ── Work Description ── */
       if (g.desc) {
-        y = checkPage(y, 40, i+1);
+        y = checkPage(y, 40, i + 1, g.wi);
         y = sectionBar(y, 'Work Description');
         y = descBox(y, g.desc);
         y += 4;
       }
 
-      // ── META GRID ────────────────────────────────────────────
-      const mp = g.resourceRows.filter(r=>r.type.toLowerCase()==='manpower').length;
-      const eq = g.resourceRows.filter(r=>r.type.toLowerCase()==='equipment').length;
-      y = checkPage(y, 20, i+1);
-      y = sectionBar(y, 'Report Details');
+      /* ── Meta Grid ── */
+      const mp = g.resourceRows.filter(r => r.type.toLowerCase() === 'manpower').length;
+      const eq = g.resourceRows.filter(r => r.type.toLowerCase() === 'equipment').length;
       const metaItems = [
         ['Foreman ID',   g.id],
         ['Foreman Name', g.crewLead],
@@ -1179,87 +1249,102 @@ async function downloadReportsPDF() {
         ['Equipment',    String(eq)],
         ['Crew Size',    String(g.resources.size)],
       ];
-      y = checkPage(y, Math.ceil(metaItems.length/3)*32 + 4, i+1);
+      y = checkPage(y, 20, i + 1, g.wi);
+      y = sectionBar(y, 'Report Details');
+      y = checkPage(y, Math.ceil(metaItems.length / 3) * 32 + 4, i + 1, g.wi);
       y = metaGrid(y, metaItems);
       y += 10;
 
-      // ── PROGRESS DETAILS TABLE ───────────────────────────────
-      const progressLines = g.progress.replace(/"/g,'').split('\n')
-        .map(l=>l.trim()).filter(Boolean)
-        .map(l=>{ const idx=l.lastIndexOf('='); return idx!==-1?[l.slice(0,idx).trim(),l.slice(idx+1).trim()]:[l,'—']; });
+      /* ── Progress Details Table ── */
+      const progressLines = g.progress.replace(/"/g, '').split('\n')
+        .map(l => l.trim()).filter(Boolean)
+        .map(l => { const idx = l.lastIndexOf('='); return idx !== -1 ? [l.slice(0, idx).trim(), l.slice(idx + 1).trim()] : [l, '—']; });
 
-      y = checkPage(y, 36, i+1);
-      y = sectionBar(y, `Progress Details (${progressLines.length} item${progressLines.length!==1?'s':''})`);
+      y = checkPage(y, 36, i + 1, g.wi);
+      y = sectionBar(y, `Progress Details (${progressLines.length} item${progressLines.length !== 1 ? 's' : ''})`);
 
-      const progWidths = [30, inner-80, 50];
-      y = tableRow(y, ['#','Description','Quantity'], progWidths, 16, true);
+      const progWidths = [30, inner - 80, 50];
+      y = tableRow(y, ['#', 'Description', 'Quantity'], progWidths, 16, true);
+
       if (progressLines.length) {
         progressLines.forEach((pl, j) => {
-          y = checkPage(y, 16, i+1);
-          y = tableRow(y, [j+1, pl[0], pl[1]], progWidths, 16, false, j%2===1);
+          y = checkPage(y, 16, i + 1, g.wi);
+          y = tableRow(y, [j + 1, pl[0], pl[1]], progWidths, 16, false, j % 2 === 1);
         });
       } else {
-        y = checkPage(y, 16, i+1);
+        y = checkPage(y, 16, i + 1, g.wi);
         normal(); pdf.setFontSize(7.5); setTxtClr(C.dim);
-        pdf.text('No progress data recorded.', M+8, y+11);
+        pdf.text('No progress data recorded.', M + 8, y + 11);
         y += 16;
       }
       y += 10;
 
-      // ── RESOURCES TABLE ──────────────────────────────────────
-      // THIS SECTION WAS MISSING IN THE ORIGINAL CODE
-      y = checkPage(y, 36, i+1);
-      y = sectionBar(y, `Resources (${g.resourceRows.length} record${g.resourceRows.length!==1?'s':''})`);
+      /* ── Resources Table ── */
+      y = checkPage(y, 36, i + 1, g.wi);
+      y = sectionBar(y, `Resources (${g.resourceRows.length} record${g.resourceRows.length !== 1 ? 's' : ''})`);
 
-      const resColW = [30, 80, inner-310, 75, 60, 65];
+      const resColW = [30, 80, inner - 310, 75, 60, 65];
       y = tableRow(y,
-        ['#','Resource ID','Designation','Type','Time-In','Time-Out'],
+        ['#', 'Resource ID', 'Designation', 'Type', 'Time-In', 'Time-Out'],
         resColW, 16, true
       );
 
       if (g.resourceRows.length) {
         g.resourceRows.forEach((r, j) => {
-          y = checkPage(y, 16, i+1);
-          const typeLabel = r.type.toLowerCase()==='manpower'
+          y = checkPage(y, 16, i + 1, g.wi);
+          const typeLabel = r.type.toLowerCase() === 'manpower'
             ? 'Manpower'
-            : r.type.toLowerCase()==='equipment'
+            : r.type.toLowerCase() === 'equipment'
               ? 'Equipment'
-              : r.type||'—';
+              : r.type || '—';
           y = tableRow(y,
-            [j+1, r.id, r.desig, typeLabel, r.tin, r.tout],
-            resColW, 16, false, j%2===1
+            [j + 1, r.id, r.desig, typeLabel, r.tin, r.tout],
+            resColW, 16, false, j % 2 === 1
           );
         });
       } else {
         normal(); pdf.setFontSize(7.5); setTxtClr(C.dim);
-        pdf.text('No resource records found.', M+8, y+11);
+        pdf.text('No resource records found.', M + 8, y + 11);
         y += 16;
       }
       y += 12;
 
-      // ── SIGNATURE / APPROVAL SECTION ─────────────────────────
-      // Ensure there's room; if not, add a new page
-      const sigNeeded = 120;
-      if (y + sigNeeded > pageH - 30) {
+      /* ─────────────────────────────────────────────────────
+         APPROVAL & SIGNATURES — appears ONLY on the last page
+         of this report, just above the footer stripe.
+         We need 18 (section bar) + 88 (sig box) + 10 (gap) + 30 (footer clearance) = 146 pt
+      ───────────────────────────────────────────────────── */
+      const SIG_NEEDED = 18 + 88 + 10 + 30; // section bar + box + gap + footer clearance
+
+      if (y + SIG_NEEDED > pageH - 24) {
+        // Not enough room — add a fresh page for signatures only
         pdf.addPage();
-        y = drawContinuedHeader(i+1, pLabel);
+        drawPageFooter();
+        y = drawPageHeader(i + 1, g.wi, true);
       }
+
+      // Draw signature block on the last page of this report
       y = signatureSection(y);
 
-      // ── PAGE FOOTER ──────────────────────────────────────────
-      setFill(C.accent); pdf.rect(0, pageH-5, pageW, 5, 'F');
-      setDraw(C.border); pdf.setLineWidth(0.3); pdf.line(0, pageH-18, pageW, pageH-18);
-      normal(); pdf.setFontSize(6.5); setTxtClr(C.dim);
-      pdf.text(
-        `Gulf Petrochemical Services LLC · Generated ${genDate} · ${pLabel}`,
-        pageW/2, pageH-8, {align:'center'}
-      );
-    } // end report loop
+      /* ── Draw footer on the last page of this report ── */
+      const reportEndPage = pdf.internal.getCurrentPageInfo().pageNumber;
+      const reportPageCount = reportEndPage - reportStartPage + 1;
+      // Go back and stamp footers on every page of this report
+      for (let p = reportStartPage; p <= reportEndPage; p++) {
+        pdf.setPage(p);
+        const pageLabel = reportPageCount > 1
+          ? `Report ${i + 1} of ${totalReports} · Page ${p - reportStartPage + 1} of ${reportPageCount}`
+          : `Report ${i + 1} of ${totalReports}`;
+        drawPageFooter(pageLabel);
+      }
+      // Return to the last page of this report before moving to the next
+      pdf.setPage(reportEndPage);
+    }
 
-    const filename = `GPS_DailyReports_${dateVal?toKey(dateVal):'export'}.pdf`;
+    const filename = `GPS_DailyReports_${dateVal ? toKey(dateVal) : 'export'}.pdf`;
     pdf.save(filename);
 
-  } catch(err) {
+  } catch (err) {
     console.error(err);
     alert('PDF generation failed: ' + err.message);
   } finally {
