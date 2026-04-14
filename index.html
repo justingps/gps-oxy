@@ -529,9 +529,10 @@ tr.saving td{opacity:0.55}
           <div class="table-header-right"><div class="table-badge" id="camp-badge">0 records</div></div>
         </div>
         <div class="table-scroll">
+          <!-- ★ UPDATED: Added "Date of Release" column header after "Date of Joining" -->
           <table class="data-table camp-table" id="camp-table">
-            <thead><tr><th>#</th><th>ID</th><th>Employee Name</th><th>Designation</th><th>Category</th><th>Nationality</th><th>Date of Joining</th><th>Camp</th><th>Status</th><th style="text-align:right;min-width:110px">Actions</th></tr></thead>
-            <tbody id="camp-tbody"><tr><td colspan="10" style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div></td></tr></tbody>
+            <thead><tr><th>#</th><th>ID</th><th>Employee Name</th><th>Designation</th><th>Category</th><th>Nationality</th><th>Date of Joining</th><th>Date of Release</th><th>Camp</th><th>Status</th><th style="text-align:right;min-width:110px">Actions</th></tr></thead>
+            <tbody id="camp-tbody"><tr><td colspan="11" style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -909,11 +910,7 @@ function renderReports(){
   cards.innerHTML=html;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   LOGO FETCH HELPER
-   Fetches the GPS logo once and caches it as a base64 data URL
-   for embedding in PDF headers.
-══════════════════════════════════════════════════════════════ */
+/* ══ LOGO FETCH HELPER ══ */
 let _cachedLogoB64 = null;
 async function fetchLogoBase64() {
   if (_cachedLogoB64) return _cachedLogoB64;
@@ -926,430 +923,157 @@ async function fetchLogoBase64() {
       reader.readAsDataURL(blob);
     });
   } catch (e) {
-    console.warn('Logo fetch failed, falling back to text placeholder:', e);
+    console.warn('Logo fetch failed:', e);
     return null;
   }
 }
 
-/* ══════════════════════════════════════════════════════════════
-   PDF GENERATION
-   Changes from previous version:
-   1. Company logo loaded as base64 and placed in every page header
-      at a fixed 36×36 pt size — replaces the "GPS" text placeholder.
-   2. Approval & Signatures block rendered ONLY ONCE per report,
-      on the very last page of that report, just above the footer.
-      It is never drawn on continuation pages.
-══════════════════════════════════════════════════════════════ */
+/* ══ PDF GENERATION ══ */
 async function downloadReportsPDF() {
   if (!lastRepGroups.length) { alert('No reports to export.'); return; }
   const overlay     = document.getElementById('pdf-overlay');
   const progressTxt = document.getElementById('pdf-progress-text');
   overlay.classList.add('visible');
-
   try {
-    /* ── Pre-fetch logo ── */
     progressTxt.textContent = 'Loading company logo…';
     const logoB64 = await fetchLogoBase64();
-
     const { jsPDF } = window.jspdf;
     const pdf   = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
     const pageW = pdf.internal.pageSize.getWidth();
     const pageH = pdf.internal.pageSize.getHeight();
-    const M     = 36;          // left / right margin
+    const M     = 36;
     const inner = pageW - M * 2;
-
     const dateVal = getDate('r-date');
     const dateStr = dateVal ? fmtDisplay(dateVal) : '—';
     const genDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-
-    /* ── Colour palette (pure RGB, no CSS vars) ── */
     const C = {
-      accent  : [224, 123,  57],
-      text    : [ 26,  34,  54],
-      sub     : [ 90, 104, 128],
-      dim     : [160, 172, 190],
-      surface : [244, 246, 249],
-      surface2: [235, 238, 243],
-      border  : [210, 215, 224],
-      white   : [255, 255, 255],
-      green   : [ 46, 170, 126],
-      blue    : [ 58, 123, 213],
-      line    : [224, 226, 232],
+      accent:[224,123,57],text:[26,34,54],sub:[90,104,128],dim:[160,172,190],
+      surface:[244,246,249],surface2:[235,238,243],border:[210,215,224],
+      white:[255,255,255],green:[46,170,126],blue:[58,123,213],line:[224,226,232],
     };
-
-    /* ── Low-level helpers ── */
-    const setFill   = c => pdf.setFillColor(...c);
-    const setDraw   = c => pdf.setDrawColor(...c);
-    const setTxtClr = c => pdf.setTextColor(...c);
-    const bold      = () => pdf.setFont('helvetica', 'bold');
-    const normal    = () => pdf.setFont('helvetica', 'normal');
-
-    /* ── Logo size constants ── */
-    const LOGO_SIZE = 36; // pt — standardised logo square
-
-    /* ─────────────────────────────────────────────────────────
-       drawPageHeader
-       Renders the full-width header band on any page.
-       reportNo  : human-readable index (1-based)
-       isContinued : true → shows "(continued)" label
-       Returns the y coordinate immediately below the header.
-    ───────────────────────────────────────────────────────── */
-    function drawPageHeader(reportNo, wi, isContinued) {
-      const headerH = 72;
-
-      // Background band
-      setFill(C.surface);
-      pdf.rect(0, 0, pageW, headerH, 'F');
-
-      // Left accent bar
-      setFill(C.accent);
-      pdf.rect(0, 0, 4, headerH, 'F');
-
-      // ── LOGO (image or fallback text) ──
-      const logoX = M + 4;
-      const logoY = (headerH - LOGO_SIZE) / 2;  // vertically centred in band
-      if (logoB64) {
-        // Draw white rounded background behind logo for consistency
-        setFill([255, 255, 255]);
-        setDraw(C.border);
-        pdf.setLineWidth(0.5);
-        pdf.roundedRect(logoX, logoY, LOGO_SIZE, LOGO_SIZE, 4, 4, 'FD');
-        // Place the actual logo image with 3 pt padding inside the box
-        const pad = 3;
-        pdf.addImage(logoB64, 'PNG', logoX + pad, logoY + pad, LOGO_SIZE - pad * 2, LOGO_SIZE - pad * 2);
+    const setFill=c=>pdf.setFillColor(...c),setDraw=c=>pdf.setDrawColor(...c),setTxtClr=c=>pdf.setTextColor(...c);
+    const bold=()=>pdf.setFont('helvetica','bold'),normal=()=>pdf.setFont('helvetica','normal');
+    const LOGO_SIZE=36;
+    function drawPageHeader(reportNo,wi,isContinued){
+      const headerH=72;
+      setFill(C.surface);pdf.rect(0,0,pageW,headerH,'F');
+      setFill(C.accent);pdf.rect(0,0,4,headerH,'F');
+      const logoX=M+4,logoY=(headerH-LOGO_SIZE)/2;
+      if(logoB64){
+        setFill([255,255,255]);setDraw(C.border);pdf.setLineWidth(0.5);
+        pdf.roundedRect(logoX,logoY,LOGO_SIZE,LOGO_SIZE,4,4,'FD');
+        const pad=3;pdf.addImage(logoB64,'PNG',logoX+pad,logoY+pad,LOGO_SIZE-pad*2,LOGO_SIZE-pad*2);
       } else {
-        // Fallback: coloured box with "GPS" text
-        setFill(C.surface2);
-        setDraw(C.border);
-        pdf.setLineWidth(0.5);
-        pdf.roundedRect(logoX, logoY, LOGO_SIZE, LOGO_SIZE, 4, 4, 'FD');
-        bold(); pdf.setFontSize(9); setTxtClr(C.accent);
-        pdf.text('GPS', logoX + LOGO_SIZE / 2, logoY + LOGO_SIZE / 2 + 3, { align: 'center' });
+        setFill(C.surface2);setDraw(C.border);pdf.setLineWidth(0.5);
+        pdf.roundedRect(logoX,logoY,LOGO_SIZE,LOGO_SIZE,4,4,'FD');
+        bold();pdf.setFontSize(9);setTxtClr(C.accent);
+        pdf.text('GPS',logoX+LOGO_SIZE/2,logoY+LOGO_SIZE/2+3,{align:'center'});
       }
-
-      // ── Company name & sub-text ──
-      const textX = logoX + LOGO_SIZE + 10;
-      bold(); pdf.setFontSize(13); setTxtClr(C.text);
-      pdf.text('Gulf Petrochemical Services', textX, 28);
-      normal(); pdf.setFontSize(7.5); setTxtClr(C.sub);
-      pdf.text('OXY OMAN · CONTRACT #24000110790', textX, 40);
-      if (isContinued) {
-        pdf.setFontSize(7); setTxtClr(C.dim);
-        pdf.text(`Work Report #${reportNo}  (continued)`, textX, 52);
-      }
-
-      // ── Report badge (top-right) ──
-      const badgeLabel = `Work Report #${reportNo}`;
-      bold(); pdf.setFontSize(9); setTxtClr(C.white);
-      const bw = pdf.getTextWidth(badgeLabel) + 22;
-      const bx = pageW - M - bw;
-      setFill(C.accent);
-      pdf.roundedRect(bx, 10, bw, 19, 3, 3, 'F');
-      pdf.text(badgeLabel, bx + bw / 2, 23, { align: 'center' });
-
-      // WI & date (below badge)
-      normal(); pdf.setFontSize(7.5); setTxtClr(C.sub);
-      pdf.text(`WI: ${wi}`, pageW - M, 40, { align: 'right' });
-      pdf.text(`Date: ${dateStr}`, pageW - M, 51, { align: 'right' });
-
-      // Separator line
-      setDraw(C.border); pdf.setLineWidth(0.5);
-      pdf.line(0, headerH, pageW, headerH);
-
-      return headerH + 10; // y after header
+      const textX=logoX+LOGO_SIZE+10;
+      bold();pdf.setFontSize(13);setTxtClr(C.text);pdf.text('Gulf Petrochemical Services',textX,28);
+      normal();pdf.setFontSize(7.5);setTxtClr(C.sub);pdf.text('OXY OMAN · CONTRACT #24000110790',textX,40);
+      if(isContinued){pdf.setFontSize(7);setTxtClr(C.dim);pdf.text(`Work Report #${reportNo}  (continued)`,textX,52);}
+      const badgeLabel=`Work Report #${reportNo}`;
+      bold();pdf.setFontSize(9);setTxtClr(C.white);
+      const bw=pdf.getTextWidth(badgeLabel)+22,bx=pageW-M-bw;
+      setFill(C.accent);pdf.roundedRect(bx,10,bw,19,3,3,'F');
+      pdf.text(badgeLabel,bx+bw/2,23,{align:'center'});
+      normal();pdf.setFontSize(7.5);setTxtClr(C.sub);
+      pdf.text(`WI: ${wi}`,pageW-M,40,{align:'right'});
+      pdf.text(`Date: ${dateStr}`,pageW-M,51,{align:'right'});
+      setDraw(C.border);pdf.setLineWidth(0.5);pdf.line(0,headerH,pageW,headerH);
+      return headerH+10;
     }
-
-    /* ─────────────────────────────────────────────────────────
-       checkPage
-       If the next block (height `needed`) won't fit on the
-       current page, adds a new page and redraws the header.
-       Returns updated y.
-    ───────────────────────────────────────────────────────── */
-    function checkPage(y, needed, reportNo, wi) {
-      const bottomGuard = pageH - 24; // keep clear of footer stripe
-      if (y + needed > bottomGuard) {
-        pdf.addPage();
-        drawPageFooter(); // footer on the page we just left (rare but safe)
-        y = drawPageHeader(reportNo, wi, true);
-      }
+    function checkPage(y,needed,reportNo,wi){
+      if(y+needed>pageH-24){pdf.addPage();drawPageFooter();y=drawPageHeader(reportNo,wi,true);}
       return y;
     }
-
-    /* ── Section title bar ── */
-    function sectionBar(y, title) {
-      setFill(C.surface2); pdf.rect(M, y, inner, 18, 'F');
-      setDraw(C.accent);   pdf.setLineWidth(2); pdf.line(M, y, M, y + 18);
-      pdf.setLineWidth(0.5);
-      bold(); pdf.setFontSize(7); setTxtClr(C.sub);
-      pdf.text(title.toUpperCase(), M + 8, y + 12);
-      normal();
-      return y + 18;
+    function sectionBar(y,title){
+      setFill(C.surface2);pdf.rect(M,y,inner,18,'F');
+      setDraw(C.accent);pdf.setLineWidth(2);pdf.line(M,y,M,y+18);pdf.setLineWidth(0.5);
+      bold();pdf.setFontSize(7);setTxtClr(C.sub);pdf.text(title.toUpperCase(),M+8,y+12);normal();
+      return y+18;
     }
-
-    /* ── Table row (alternating shading) ── */
-    function tableRow(y, cells, widths, rowH, isHeader, isAlt) {
-      if (isHeader)      { setFill(C.surface2); }
-      else if (isAlt)    { setFill([248, 250, 253]); }
-      else               { setFill(C.white); }
-      pdf.rect(M, y, inner, rowH, 'F');
-
-      setDraw(C.line); pdf.setLineWidth(0.3);
-      pdf.line(M, y + rowH, M + inner, y + rowH);
-
-      let x = M;
-      cells.forEach((cell, ci) => {
-        const w = widths[ci];
-        if (isHeader) { bold(); pdf.setFontSize(6.5); setTxtClr(C.sub); }
-        else          { normal(); pdf.setFontSize(7.5); setTxtClr(C.text); }
-        const lines = pdf.splitTextToSize(String(cell || '—'), w - 8);
-        pdf.text(lines[0], x + 4, y + rowH / 2 + (isHeader ? 2 : 2.5));
-        x += w;
+    function tableRow(y,cells,widths,rowH,isHeader,isAlt){
+      if(isHeader)setFill(C.surface2);else if(isAlt)setFill([248,250,253]);else setFill(C.white);
+      pdf.rect(M,y,inner,rowH,'F');setDraw(C.line);pdf.setLineWidth(0.3);pdf.line(M,y+rowH,M+inner,y+rowH);
+      let x=M;
+      cells.forEach((cell,ci)=>{
+        const w=widths[ci];
+        if(isHeader){bold();pdf.setFontSize(6.5);setTxtClr(C.sub);}else{normal();pdf.setFontSize(7.5);setTxtClr(C.text);}
+        const lines=pdf.splitTextToSize(String(cell||'—'),w-8);
+        pdf.text(lines[0],x+4,y+rowH/2+(isHeader?2:2.5));x+=w;
       });
-      return y + rowH;
+      return y+rowH;
     }
-
-    /* ── Meta grid (3-column key/value pairs) ── */
-    function metaGrid(y, items) {
-      const cols   = 3;
-      const cellW  = inner / cols;
-      const cellH  = 32;
-      const rows   = Math.ceil(items.length / cols);
-      const totalH = rows * cellH;
-
-      for (let ri = 0; ri < rows; ri++) {
-        for (let ci = 0; ci < cols; ci++) {
-          const idx = ri * cols + ci;
-          if (idx >= items.length) continue;
-          const cx = M + ci * cellW;
-          const cy = y + ri * cellH;
-          setFill(ci % 2 === 0 ? C.surface : C.surface2);
-          setDraw(C.border); pdf.setLineWidth(0.3);
-          pdf.rect(cx, cy, cellW, cellH, 'FD');
-          bold(); pdf.setFontSize(6); setTxtClr(C.dim);
-          pdf.text(String(items[idx][0]).toUpperCase(), cx + 5, cy + 10);
-          normal(); pdf.setFontSize(8); setTxtClr(C.text);
-          const val = pdf.splitTextToSize(String(items[idx][1] || '—'), cellW - 10);
-          pdf.text(val[0], cx + 5, cy + 22);
-        }
-      }
-      return y + totalH;
+    function metaGrid(y,items){
+      const cols=3,cellW=inner/cols,cellH=32,rows=Math.ceil(items.length/cols),totalH=rows*cellH;
+      for(let ri=0;ri<rows;ri++){for(let ci=0;ci<cols;ci++){const idx=ri*cols+ci;if(idx>=items.length)continue;const cx=M+ci*cellW,cy=y+ri*cellH;setFill(ci%2===0?C.surface:C.surface2);setDraw(C.border);pdf.setLineWidth(0.3);pdf.rect(cx,cy,cellW,cellH,'FD');bold();pdf.setFontSize(6);setTxtClr(C.dim);pdf.text(String(items[idx][0]).toUpperCase(),cx+5,cy+10);normal();pdf.setFontSize(8);setTxtClr(C.text);const val=pdf.splitTextToSize(String(items[idx][1]||'—'),cellW-10);pdf.text(val[0],cx+5,cy+22);}}
+      return y+totalH;
     }
-
-    /* ── Description box ── */
-    function descBox(y, text) {
-      if (!text) return y;
-      normal(); pdf.setFontSize(8); setTxtClr(C.sub);
-      const lines = pdf.splitTextToSize(text, inner - 16);
-      const boxH  = lines.length * 11 + 14;
-      setFill([250, 251, 254]); setDraw(C.border); pdf.setLineWidth(0.3);
-      pdf.rect(M, y, inner, boxH, 'FD');
-      setDraw(C.accent); pdf.setLineWidth(2);
-      pdf.line(M, y, M, y + boxH);
-      pdf.setLineWidth(0.3);
-      pdf.text(lines, M + 10, y + 11);
-      return y + boxH + 6;
+    function descBox(y,text){
+      if(!text)return y;normal();pdf.setFontSize(8);setTxtClr(C.sub);
+      const lines=pdf.splitTextToSize(text,inner-16),boxH=lines.length*11+14;
+      setFill([250,251,254]);setDraw(C.border);pdf.setLineWidth(0.3);pdf.rect(M,y,inner,boxH,'FD');
+      setDraw(C.accent);pdf.setLineWidth(2);pdf.line(M,y,M,y+boxH);pdf.setLineWidth(0.3);pdf.text(lines,M+10,y+11);
+      return y+boxH+6;
     }
-
-    /* ─────────────────────────────────────────────────────────
-       signatureSection
-       Draws the Approval & Signatures block.
-       Should be called ONCE per report, on its final page,
-       with enough vertical space already verified by the caller.
-       Returns y after the block.
-    ───────────────────────────────────────────────────────── */
-    function signatureSection(y) {
-      const sigBoxH = 88;
-      y = sectionBar(y, 'Approval & Signatures');
-
-      setDraw(C.border); pdf.setLineWidth(0.5);
-      pdf.rect(M, y, inner, sigBoxH, 'S');
-
-      const colW = inner / 3;
-      const roles = [
-        { title: 'Site Engineer',         color: C.green  },
-        { title: 'Site Manager',          color: C.blue   },
-        { title: 'Client Representative', color: C.accent },
-      ];
-
-      roles.forEach((role, ci) => {
-        const cx = M + ci * colW;
-        if (ci > 0) {
-          setDraw(C.border); pdf.setLineWidth(0.4);
-          pdf.line(cx, y, cx, y + sigBoxH);
-        }
-        // Role header strip
-        pdf.setFillColor(...role.color);
-        pdf.rect(cx, y, colW, 14, 'F');
-        bold(); pdf.setFontSize(7.5); setTxtClr(C.white);
-        pdf.text(role.title, cx + colW / 2, y + 10, { align: 'center' });
-
-        // Fields
-        const fieldY   = y + 22;
-        const fieldGap = 18;
-        const fields   = ['Name:', 'Designation:', 'Signature:', 'Date:'];
-        fields.forEach((lbl, fi) => {
-          normal(); pdf.setFontSize(7); setTxtClr(C.sub);
-          pdf.text(lbl, cx + 6, fieldY + fi * fieldGap);
-          setDraw(C.line); pdf.setLineWidth(0.4);
-          pdf.line(cx + 38, fieldY + fi * fieldGap + 1, cx + colW - 6, fieldY + fi * fieldGap + 1);
+    function signatureSection(y){
+      const sigBoxH=88;y=sectionBar(y,'Approval & Signatures');
+      setDraw(C.border);pdf.setLineWidth(0.5);pdf.rect(M,y,inner,sigBoxH,'S');
+      const colW=inner/3;
+      [{title:'Site Engineer',color:C.green},{title:'Site Manager',color:C.blue},{title:'Client Representative',color:C.accent}].forEach((role,ci)=>{
+        const cx=M+ci*colW;
+        if(ci>0){setDraw(C.border);pdf.setLineWidth(0.4);pdf.line(cx,y,cx,y+sigBoxH);}
+        pdf.setFillColor(...role.color);pdf.rect(cx,y,colW,14,'F');
+        bold();pdf.setFontSize(7.5);setTxtClr(C.white);pdf.text(role.title,cx+colW/2,y+10,{align:'center'});
+        const fieldY=y+22,fieldGap=18;
+        ['Name:','Designation:','Signature:','Date:'].forEach((lbl,fi)=>{
+          normal();pdf.setFontSize(7);setTxtClr(C.sub);pdf.text(lbl,cx+6,fieldY+fi*fieldGap);
+          setDraw(C.line);pdf.setLineWidth(0.4);pdf.line(cx+38,fieldY+fi*fieldGap+1,cx+colW-6,fieldY+fi*fieldGap+1);
         });
       });
-
-      return y + sigBoxH + 10;
+      return y+sigBoxH+10;
     }
-
-    /* ── Page footer stripe (drawn at the very bottom) ── */
-    function drawPageFooter(pageLabel) {
-      const pNum = pdf.internal.getCurrentPageInfo().pageNumber;
-      setFill(C.accent);
-      pdf.rect(0, pageH - 5, pageW, 5, 'F');
-      setDraw(C.border); pdf.setLineWidth(0.3);
-      pdf.line(0, pageH - 18, pageW, pageH - 18);
-      normal(); pdf.setFontSize(6.5); setTxtClr(C.dim);
-      pdf.text(
-        `Gulf Petrochemical Services LLC · Generated ${genDate}${pageLabel ? ' · ' + pageLabel : ''}`,
-        pageW / 2, pageH - 8, { align: 'center' }
-      );
+    function drawPageFooter(pageLabel){
+      setFill(C.accent);pdf.rect(0,pageH-5,pageW,5,'F');
+      setDraw(C.border);pdf.setLineWidth(0.3);pdf.line(0,pageH-18,pageW,pageH-18);
+      normal();pdf.setFontSize(6.5);setTxtClr(C.dim);
+      pdf.text(`Gulf Petrochemical Services LLC · Generated ${genDate}${pageLabel?' · '+pageLabel:''}`,pageW/2,pageH-8,{align:'center'});
     }
-
-    /* ══ MAIN LOOP — one PDF report per work group ══ */
-    const totalReports = lastRepGroups.length;
-
-    for (let i = 0; i < totalReports; i++) {
-      const g = lastRepGroups[i];
-      progressTxt.textContent = `Rendering report ${i + 1} of ${totalReports}…`;
-      if (i > 0) pdf.addPage();
-
-      /* Track which PDF page this report started on so we can
-         later determine how many pages it spans (for footer labels). */
-      const reportStartPage = pdf.internal.getCurrentPageInfo().pageNumber;
-
-      // Draw first-page header (not a continuation)
-      let y = drawPageHeader(i + 1, g.wi, false);
-
-      /* ── Work Description ── */
-      if (g.desc) {
-        y = checkPage(y, 40, i + 1, g.wi);
-        y = sectionBar(y, 'Work Description');
-        y = descBox(y, g.desc);
-        y += 4;
-      }
-
-      /* ── Meta Grid ── */
-      const mp = g.resourceRows.filter(r => r.type.toLowerCase() === 'manpower').length;
-      const eq = g.resourceRows.filter(r => r.type.toLowerCase() === 'equipment').length;
-      const metaItems = [
-        ['Foreman ID',   g.id],
-        ['Foreman Name', g.crewLead],
-        ['Area / Block', g.area],
-        ['Discipline',   g.discipline],
-        ['Permit No.',   g.permitNo],
-        ['Work Hours',   `${g.timeIn} → ${g.timeOut}`],
-        ['Manpower',     String(mp)],
-        ['Equipment',    String(eq)],
-        ['Crew Size',    String(g.resources.size)],
-      ];
-      y = checkPage(y, 20, i + 1, g.wi);
-      y = sectionBar(y, 'Report Details');
-      y = checkPage(y, Math.ceil(metaItems.length / 3) * 32 + 4, i + 1, g.wi);
-      y = metaGrid(y, metaItems);
-      y += 10;
-
-      /* ── Progress Details Table ── */
-      const progressLines = g.progress.replace(/"/g, '').split('\n')
-        .map(l => l.trim()).filter(Boolean)
-        .map(l => { const idx = l.lastIndexOf('='); return idx !== -1 ? [l.slice(0, idx).trim(), l.slice(idx + 1).trim()] : [l, '—']; });
-
-      y = checkPage(y, 36, i + 1, g.wi);
-      y = sectionBar(y, `Progress Details (${progressLines.length} item${progressLines.length !== 1 ? 's' : ''})`);
-
-      const progWidths = [30, inner - 80, 50];
-      y = tableRow(y, ['#', 'Description', 'Quantity'], progWidths, 16, true);
-
-      if (progressLines.length) {
-        progressLines.forEach((pl, j) => {
-          y = checkPage(y, 16, i + 1, g.wi);
-          y = tableRow(y, [j + 1, pl[0], pl[1]], progWidths, 16, false, j % 2 === 1);
-        });
-      } else {
-        y = checkPage(y, 16, i + 1, g.wi);
-        normal(); pdf.setFontSize(7.5); setTxtClr(C.dim);
-        pdf.text('No progress data recorded.', M + 8, y + 11);
-        y += 16;
-      }
-      y += 10;
-
-      /* ── Resources Table ── */
-      y = checkPage(y, 36, i + 1, g.wi);
-      y = sectionBar(y, `Resources (${g.resourceRows.length} record${g.resourceRows.length !== 1 ? 's' : ''})`);
-
-      const resColW = [30, 80, inner - 310, 75, 60, 65];
-      y = tableRow(y,
-        ['#', 'Resource ID', 'Designation', 'Type', 'Time-In', 'Time-Out'],
-        resColW, 16, true
-      );
-
-      if (g.resourceRows.length) {
-        g.resourceRows.forEach((r, j) => {
-          y = checkPage(y, 16, i + 1, g.wi);
-          const typeLabel = r.type.toLowerCase() === 'manpower'
-            ? 'Manpower'
-            : r.type.toLowerCase() === 'equipment'
-              ? 'Equipment'
-              : r.type || '—';
-          y = tableRow(y,
-            [j + 1, r.id, r.desig, typeLabel, r.tin, r.tout],
-            resColW, 16, false, j % 2 === 1
-          );
-        });
-      } else {
-        normal(); pdf.setFontSize(7.5); setTxtClr(C.dim);
-        pdf.text('No resource records found.', M + 8, y + 11);
-        y += 16;
-      }
-      y += 12;
-
-      /* ─────────────────────────────────────────────────────
-         APPROVAL & SIGNATURES — appears ONLY on the last page
-         of this report, just above the footer stripe.
-         We need 18 (section bar) + 88 (sig box) + 10 (gap) + 30 (footer clearance) = 146 pt
-      ───────────────────────────────────────────────────── */
-      const SIG_NEEDED = 18 + 88 + 10 + 30; // section bar + box + gap + footer clearance
-
-      if (y + SIG_NEEDED > pageH - 24) {
-        // Not enough room — add a fresh page for signatures only
-        pdf.addPage();
-        drawPageFooter();
-        y = drawPageHeader(i + 1, g.wi, true);
-      }
-
-      // Draw signature block on the last page of this report
-      y = signatureSection(y);
-
-      /* ── Draw footer on the last page of this report ── */
-      const reportEndPage = pdf.internal.getCurrentPageInfo().pageNumber;
-      const reportPageCount = reportEndPage - reportStartPage + 1;
-      // Go back and stamp footers on every page of this report
-      for (let p = reportStartPage; p <= reportEndPage; p++) {
-        pdf.setPage(p);
-        const pageLabel = reportPageCount > 1
-          ? `Report ${i + 1} of ${totalReports} · Page ${p - reportStartPage + 1} of ${reportPageCount}`
-          : `Report ${i + 1} of ${totalReports}`;
-        drawPageFooter(pageLabel);
-      }
-      // Return to the last page of this report before moving to the next
+    const totalReports=lastRepGroups.length;
+    for(let i=0;i<totalReports;i++){
+      const g=lastRepGroups[i];
+      progressTxt.textContent=`Rendering report ${i+1} of ${totalReports}…`;
+      if(i>0)pdf.addPage();
+      const reportStartPage=pdf.internal.getCurrentPageInfo().pageNumber;
+      let y=drawPageHeader(i+1,g.wi,false);
+      if(g.desc){y=checkPage(y,40,i+1,g.wi);y=sectionBar(y,'Work Description');y=descBox(y,g.desc);y+=4;}
+      const mp=g.resourceRows.filter(r=>r.type.toLowerCase()==='manpower').length;
+      const eq=g.resourceRows.filter(r=>r.type.toLowerCase()==='equipment').length;
+      const metaItems=[['Foreman ID',g.id],['Foreman Name',g.crewLead],['Area / Block',g.area],['Discipline',g.discipline],['Permit No.',g.permitNo],['Work Hours',`${g.timeIn} → ${g.timeOut}`],['Manpower',String(mp)],['Equipment',String(eq)],['Crew Size',String(g.resources.size)]];
+      y=checkPage(y,20,i+1,g.wi);y=sectionBar(y,'Report Details');
+      y=checkPage(y,Math.ceil(metaItems.length/3)*32+4,i+1,g.wi);y=metaGrid(y,metaItems);y+=10;
+      const progressLines=g.progress.replace(/"/g,'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const idx=l.lastIndexOf('=');return idx!==-1?[l.slice(0,idx).trim(),l.slice(idx+1).trim()]:[l,'—'];});
+      y=checkPage(y,36,i+1,g.wi);y=sectionBar(y,`Progress Details (${progressLines.length} item${progressLines.length!==1?'s':''})`);
+      const progWidths=[30,inner-80,50];y=tableRow(y,['#','Description','Quantity'],progWidths,16,true);
+      if(progressLines.length){progressLines.forEach((pl,j)=>{y=checkPage(y,16,i+1,g.wi);y=tableRow(y,[j+1,pl[0],pl[1]],progWidths,16,false,j%2===1);});}else{y=checkPage(y,16,i+1,g.wi);normal();pdf.setFontSize(7.5);setTxtClr(C.dim);pdf.text('No progress data recorded.',M+8,y+11);y+=16;}
+      y+=10;
+      y=checkPage(y,36,i+1,g.wi);y=sectionBar(y,`Resources (${g.resourceRows.length} record${g.resourceRows.length!==1?'s':''})`);
+      const resColW=[30,80,inner-310,75,60,65];y=tableRow(y,['#','Resource ID','Designation','Type','Time-In','Time-Out'],resColW,16,true);
+      if(g.resourceRows.length){g.resourceRows.forEach((r,j)=>{y=checkPage(y,16,i+1,g.wi);const typeLabel=r.type.toLowerCase()==='manpower'?'Manpower':r.type.toLowerCase()==='equipment'?'Equipment':r.type||'—';y=tableRow(y,[j+1,r.id,r.desig,typeLabel,r.tin,r.tout],resColW,16,false,j%2===1);});}else{normal();pdf.setFontSize(7.5);setTxtClr(C.dim);pdf.text('No resource records found.',M+8,y+11);y+=16;}
+      y+=12;
+      const SIG_NEEDED=18+88+10+30;
+      if(y+SIG_NEEDED>pageH-24){pdf.addPage();drawPageFooter();y=drawPageHeader(i+1,g.wi,true);}
+      y=signatureSection(y);
+      const reportEndPage=pdf.internal.getCurrentPageInfo().pageNumber;
+      const reportPageCount=reportEndPage-reportStartPage+1;
+      for(let p=reportStartPage;p<=reportEndPage;p++){pdf.setPage(p);const pageLabel=reportPageCount>1?`Report ${i+1} of ${totalReports} · Page ${p-reportStartPage+1} of ${reportPageCount}`:`Report ${i+1} of ${totalReports}`;drawPageFooter(pageLabel);}
       pdf.setPage(reportEndPage);
     }
-
-    const filename = `GPS_DailyReports_${dateVal ? toKey(dateVal) : 'export'}.pdf`;
-    pdf.save(filename);
-
-  } catch (err) {
-    console.error(err);
-    alert('PDF generation failed: ' + err.message);
-  } finally {
-    overlay.classList.remove('visible');
-  }
+    pdf.save(`GPS_DailyReports_${dateVal?toKey(dateVal):'export'}.pdf`);
+  } catch(err){console.error(err);alert('PDF generation failed: '+err.message);}
+  finally{overlay.classList.remove('visible');}
 }
 
 /* ══ REPORT SUMMARY ══ */
@@ -1416,9 +1140,13 @@ function renderResource(){
   document.getElementById('res-tables').innerHTML=mkT('Manpower',mp,'badge-mp','Manpower')+mkT('Equipment',eq,'badge-eq','Equipment')+mkT('Unclassified',nf,'badge-nf','Other');
 }
 
-/* ══ CAMP — LOAD ══ */
+/* ══════════════════════════════════════════════════════
+   CAMP — LOAD
+   ★ Added: 'dor' field (Date of Release) — parsed the
+     same way as 'doj' using parseDOJ()
+══════════════════════════════════════════════════════ */
 async function campLoadData() {
-  document.getElementById('camp-tbody').innerHTML=`<tr><td colspan="10" style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div></td></tr>`;
+  document.getElementById('camp-tbody').innerHTML=`<tr><td colspan="11" style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div></td></tr>`;
   try {
     const res=await fetch(CAMP_WEBAPP_URL+'?t='+Date.now());
     const json=await res.json();
@@ -1431,6 +1159,8 @@ async function campLoadData() {
       cat:   String(r['Category']||r['CATEGORY']||''),
       nat:   String(r['Nationality']||r['NATIONALITY']||''),
       doj:   parseDOJ(r['Date of Joining']||r['DATE OF JOINING']||r['DOJ']||''),
+      // ★ NEW: Date of Release — reads multiple possible column name variants
+      dor:   parseDOJ(r['Date of Release']||r['DATE OF RELEASE']||r['DOR']||r['Release Date']||r['RELEASE DATE']||''),
       camp:  String(r['Camp']||r['CAMP']||''),
       status:String(r['Status']||r['STATUS']||''),
     }));
@@ -1439,7 +1169,7 @@ async function campLoadData() {
     campToast('Data loaded','success');
   } catch(e) {
     console.error(e);
-    document.getElementById('camp-tbody').innerHTML=`<tr><td colspan="10" class="no-data">⚠ Failed to load data.<br><small style="color:var(--text-dim)">${escHtml(e.message)}</small></td></tr>`;
+    document.getElementById('camp-tbody').innerHTML=`<tr><td colspan="11" class="no-data">⚠ Failed to load data.<br><small style="color:var(--text-dim)">${escHtml(e.message)}</small></td></tr>`;
     campToast('Failed to load: '+e.message,'error');
     document.getElementById('camp-stats-wrap').innerHTML='';
   }
@@ -1497,7 +1227,8 @@ function campFilterRender() {
     if(fCat !=='all'&&r.cat   !==fCat)  return false;
     if(fStat!=='all'&&r.status!==fStat) return false;
     if(fNat !=='all'&&r.nat   !==fNat)  return false;
-    if(q){ const hay=`${r.id} ${r.name} ${r.desig} ${r.cat} ${r.nat} ${r.doj} ${r.camp} ${r.status}`.toLowerCase(); if(!hay.includes(q))return false; }
+    // ★ Search also covers the dor field
+    if(q){ const hay=`${r.id} ${r.name} ${r.desig} ${r.cat} ${r.nat} ${r.doj} ${r.dor} ${r.camp} ${r.status}`.toLowerCase(); if(!hay.includes(q))return false; }
     return true;
   });
   campUpdateStats(campFilteredRows);
@@ -1505,7 +1236,7 @@ function campFilterRender() {
 }
 function campRenderTable(rows) {
   document.getElementById('camp-badge').textContent=`${rows.length} record${rows.length!==1?'s':''}`;
-  if(!rows.length){ document.getElementById('camp-tbody').innerHTML='<tr><td colspan="10" class="no-data">No records match the current filters.</td></tr>'; return; }
+  if(!rows.length){ document.getElementById('camp-tbody').innerHTML='<tr><td colspan="11" class="no-data">No records match the current filters.</td></tr>'; return; }
   document.getElementById('camp-tbody').innerHTML=rows.map((r,i)=>campRowHTML(r,i+1)).join('');
 }
 
@@ -1514,7 +1245,13 @@ function campStatusBadge(s){ const m={'POB':'s-pob','POB-A':'s-pob-a','POB-B':'s
 function campCatBadge(c){ if(c==='Manpower')return `<span class="cat-mp">Manpower</span>`; if(c==='Equipment')return `<span class="cat-eq">Equipment</span>`; return `<span class="cat-def">${escHtml(c||'—')}</span>`; }
 function campNatBadge(n){ if(n==='Expats')return `<span class="nat-exp">Expats</span>`; if(n==='Nationals')return `<span class="nat-nat">Nationals</span>`; return `<span class="cat-def">${escHtml(n||'—')}</span>`; }
 
-/* ══ CAMP ROW HTML ══ */
+/* ══════════════════════════════════════════════════════
+   CAMP ROW HTML
+   ★ Added "Date of Release" cell between DOJ and Camp:
+     - View mode  : displays fmtDOJ(r.dor) (same as DOJ)
+     - Edit mode  : date input pre-filled with r.dor
+   ★ colspan for no-data / spinner rows updated to 11
+══════════════════════════════════════════════════════ */
 function campRowHTML(r,idx){
   const rid=r._row;
   const statusOpts=['POB','POB-A','POB-B','POB-C','POB-D','POL','POR'].map(o=>`<option ${r.status===o?'selected':''}>${o}</option>`).join('');
@@ -1527,6 +1264,8 @@ function campRowHTML(r,idx){
     <td><span class="cell-view">${campCatBadge(r.cat)}</span><select class="inline-input cell-edit" id="ci-cat-${rid}" style="min-width:110px"><option value="">— Select —</option><option ${r.cat==='Manpower'?'selected':''}>Manpower</option><option ${r.cat==='Equipment'?'selected':''}>Equipment</option></select></td>
     <td><span class="cell-view">${campNatBadge(r.nat)}</span><select class="inline-input cell-edit" id="ci-nat-${rid}" style="min-width:110px"><option value="">— Select —</option><option ${r.nat==='Expats'?'selected':''}>Expats</option><option ${r.nat==='Nationals'?'selected':''}>Nationals</option></select></td>
     <td><span class="cell-view mono">${fmtDOJ(r.doj)}</span><input class="inline-input cell-edit" id="ci-doj-${rid}" type="date" value="${escHtml(r.doj)}" style="min-width:140px"></td>
+    <!-- ★ NEW: Date of Release column -->
+    <td><span class="cell-view mono">${fmtDOJ(r.dor)}</span><input class="inline-input cell-edit" id="ci-dor-${rid}" type="date" value="${escHtml(r.dor)}" style="min-width:140px"></td>
     <td><span class="cell-view">${escHtml(r.camp)}</span><select class="inline-input cell-edit" id="ci-camp-${rid}" style="min-width:120px"><option value="">— Select —</option><option ${r.camp==='Safah'?'selected':''}>Safah</option><option ${r.camp==='Wadi Latham'?'selected':''}>Wadi Latham</option></select></td>
     <td><span class="cell-view">${campStatusBadge(r.status)}</span><select class="inline-input cell-edit" id="ci-status-${rid}" style="min-width:100px"><option value="">— Select —</option>${statusOpts}</select></td>
     <td style="text-align:right">
@@ -1548,7 +1287,10 @@ function campRowHTML(r,idx){
 function campEditRow(rid){ const tr=document.getElementById('camp-row-'+rid); if(tr)tr.classList.add('editing'); }
 function campCancelEdit(rid,isNew){ if(isNew){ const tr=document.getElementById('camp-row-'+rid); if(tr)tr.remove(); return; } const tr=document.getElementById('camp-row-'+rid); if(tr)tr.classList.remove('editing'); }
 
-/* ══ CAMP ADD ROW ══ */
+/* ══════════════════════════════════════════════════════
+   CAMP ADD ROW
+   ★ Added ci-dor input between DOJ and Camp inputs
+══════════════════════════════════════════════════════ */
 function campAddRow(){
   campNewRowCounter--;
   const tid='new_'+Math.abs(campNewRowCounter);
@@ -1564,6 +1306,8 @@ function campAddRow(){
     <td><select class="inline-input cell-edit" id="ci-cat-${tid}" style="min-width:110px"><option value="">— Category —</option><option>Manpower</option><option>Equipment</option></select></td>
     <td><select class="inline-input cell-edit" id="ci-nat-${tid}" style="min-width:110px"><option value="">— Nationality —</option><option>Expats</option><option>Nationals</option></select></td>
     <td><input class="inline-input cell-edit" id="ci-doj-${tid}" type="date" style="min-width:140px"></td>
+    <!-- ★ NEW: Date of Release input for new row -->
+    <td><input class="inline-input cell-edit" id="ci-dor-${tid}" type="date" style="min-width:140px"></td>
     <td><select class="inline-input cell-edit" id="ci-camp-${tid}" style="min-width:120px"><option value="">— Camp —</option><option>Safah</option><option>Wadi Latham</option></select></td>
     <td><select class="inline-input cell-edit" id="ci-status-${tid}" style="min-width:100px"><option value="">— Status —</option>${statusOpts}</select></td>
     <td style="text-align:right">
@@ -1579,11 +1323,17 @@ function campAddRow(){
   document.getElementById('ci-id-'+tid).focus();
 }
 
-/* ══ CAMP SAVE ══ */
+/* ══════════════════════════════════════════════════════
+   CAMP SAVE
+   ★ Reads ci-dor value and includes 'Date of Release'
+     in both the add and update payloads sent to the
+     Google Apps Script web app
+══════════════════════════════════════════════════════ */
 async function campSaveRow(rid,isNew){
   const g=id=>{ const el=document.getElementById(id); return el?el.value.trim():''; };
   const empId=g(`ci-id-${rid}`),name=g(`ci-name-${rid}`),desig=g(`ci-desig-${rid}`);
   const cat=g(`ci-cat-${rid}`),nat=g(`ci-nat-${rid}`),doj=g(`ci-doj-${rid}`);
+  const dor=g(`ci-dor-${rid}`); // ★ NEW: Date of Release value
   const camp=g(`ci-camp-${rid}`),status=g(`ci-status-${rid}`);
   if(!name)  { campToast('Employee Name is required','error'); return; }
   if(!cat)   { campToast('Please select a Category','error');  return; }
@@ -1591,8 +1341,8 @@ async function campSaveRow(rid,isNew){
   if(!status){ campToast('Please select a Status','error');    return; }
   const tr=document.getElementById('camp-row-'+rid); if(tr)tr.classList.add('saving');
   const payload=isNew
-    ?{ action:'add','ID':empId,'Employee Name':name,'Designation':desig,'Category':cat,'Nationality':nat,'Date of Joining':doj,'Camp':camp,'Status':status }
-    :{ action:'update',_row:rid,'ID':empId,'Employee Name':name,'Designation':desig,'Category':cat,'Nationality':nat,'Date of Joining':doj,'Camp':camp,'Status':status };
+    ?{ action:'add','ID':empId,'Employee Name':name,'Designation':desig,'Category':cat,'Nationality':nat,'Date of Joining':doj,'Date of Release':dor,'Camp':camp,'Status':status }
+    :{ action:'update',_row:rid,'ID':empId,'Employee Name':name,'Designation':desig,'Category':cat,'Nationality':nat,'Date of Joining':doj,'Date of Release':dor,'Camp':camp,'Status':status };
   try {
     const res=await fetch(CAMP_WEBAPP_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
     const json=await res.json();
@@ -1615,14 +1365,18 @@ async function campDeleteRow(rid){
   } catch(e){ console.error(e); campToast('Delete failed: '+e.message,'error'); if(tr)tr.classList.remove('saving'); }
 }
 
-/* ══ CAMP EXCEL ══ */
+/* ══════════════════════════════════════════════════════
+   CAMP EXCEL EXPORT
+   ★ Added 'Date of Release' column after 'Date of Joining'
+     in All Employees, Safah, and Wadi Latham sheets
+══════════════════════════════════════════════════════ */
 function exportCampExcel(){
   if(!campAllRows.length){alert('No data to export.');return;}
-  const hdr=['#','ID','Employee Name','Designation','Category','Nationality','Date of Joining','Camp','Status'];
-  const toRow=(r,i)=>[i+1,r.id,r.name,r.desig,r.cat,r.nat,fmtDOJ(r.doj),r.camp,r.status];
+  const hdr=['#','ID','Employee Name','Designation','Category','Nationality','Date of Joining','Date of Release','Camp','Status'];
+  const toRow=(r,i)=>[i+1,r.id,r.name,r.desig,r.cat,r.nat,fmtDOJ(r.doj),fmtDOJ(r.dor),r.camp,r.status];
   const wsData=[hdr,...campAllRows.map(toRow)];
   const ws=XLSX.utils.aoa_to_sheet(wsData);
-  ws['!cols']=[{wch:4},{wch:12},{wch:26},{wch:20},{wch:12},{wch:12},{wch:14},{wch:14},{wch:10}];
+  ws['!cols']=[{wch:4},{wch:12},{wch:26},{wch:20},{wch:12},{wch:12},{wch:16},{wch:16},{wch:14},{wch:10}];
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'All Employees');
   ['Safah','Wadi Latham'].forEach(camp=>{
