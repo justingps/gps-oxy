@@ -341,7 +341,7 @@ tr.saving td{opacity:0.55}
     <button class="btn-login" id="btn-login">Sign In</button>
     <div class="login-error" id="login-err"><i class="fas fa-circle-exclamation"></i> Invalid username or password</div>
     <div class="login-footer">Gulf Petrochemical Services LLC. © 2025 — All Rights Reserved</div>
-    <div class="login-version">v3.4.1</div>
+    <div class="login-version">v3.4.2</div>
   </div>
 </div>
 
@@ -529,7 +529,6 @@ tr.saving td{opacity:0.55}
           <div class="table-header-right"><div class="table-badge" id="camp-badge">0 records</div></div>
         </div>
         <div class="table-scroll">
-          <!-- ★ UPDATED: Added "Date of Release" column header after "Date of Joining" -->
           <table class="data-table camp-table" id="camp-table">
             <thead><tr><th>#</th><th>ID</th><th>Employee Name</th><th>Designation</th><th>Category</th><th>Nationality</th><th>Date of Joining</th><th>Date of Release</th><th>Camp</th><th>Status</th><th style="text-align:right;min-width:110px">Actions</th></tr></thead>
             <tbody id="camp-tbody"><tr><td colspan="11" style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div></td></tr></tbody>
@@ -594,32 +593,65 @@ function buildStatsBar(groups) {
   return `<div class="stats-bar">${groups.map(group).join('')}</div>`;
 }
 
-/* ══ DOJ HELPERS ══ */
+/* ══════════════════════════════════════════════════════
+   DOJ / DOR DATE HELPERS — FIXED
+   
+   parseDOJ() now correctly handles ALL these formats
+   that Google Sheets may return:
+     1. YYYY-MM-DD        → e.g. "2026-04-13"  (ISO, from Sheets date serial)
+     2. DD-MM-YYYY        → e.g. "2-11-2026"   (numeric month, dash-separated)  ← WAS BROKEN
+     3. DD/MM/YYYY        → e.g. "13/04/2026"  (numeric month, slash-separated)
+     4. DD-Mon-YYYY       → e.g. "2-Nov-2026"  (3-letter month abbreviation)
+
+   All formats are normalised to YYYY-MM-DD for internal
+   storage and then formatted for display via fmtDOJ().
+══════════════════════════════════════════════════════ */
 const DOJ_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
 function parseDOJ(raw) {
-  if (!raw || raw === '—') return '';
+  if (!raw || String(raw).trim() === '' || raw === '—') return '';
   const s = String(raw).trim();
   let m;
-  // YYYY-MM-DD  →  keep as-is (already correct for <input type="date">)
+
+  // 1. YYYY-MM-DD  (ISO format — from Google Sheets serialised dates)
   m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
   if (m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
-  // D-M-YYYY or DD-MM-YYYY  →  treat as DAY-MONTH-YEAR (your sheet format)
-  m = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-  if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
-  // D-Mon-YYYY  (e.g. 2-Nov-2026)
+
+  // 2. DD-Mon-YYYY  (e.g. "2-Nov-2026" — 3-letter month abbreviation)
   m = s.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/);
   if (m) {
     const mi = DOJ_MONTHS.findIndex(x => x.toLowerCase() === m[2].toLowerCase());
     if (mi >= 0) return `${m[3]}-${String(mi+1).padStart(2,'0')}-${m[1].padStart(2,'0')}`;
   }
-  // DD/MM/YYYY
+
+  // 3. DD-MM-YYYY  (e.g. "2-11-2026" — numeric month, dashes)  ← KEY FIX
+  //    Guard: month part must be 1-12, day part 1-31
+  m = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if (m) {
+    const day = parseInt(m[1], 10), mon = parseInt(m[2], 10), yr = parseInt(m[3], 10);
+    if (mon >= 1 && mon <= 12 && day >= 1 && day <= 31) {
+      return `${yr}-${String(mon).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    }
+  }
+
+  // 4. DD/MM/YYYY  (e.g. "13/04/2026" — numeric month, slashes)
   m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
-  // Fallback: let JS try to parse it
+  if (m) {
+    const day = parseInt(m[1], 10), mon = parseInt(m[2], 10), yr = parseInt(m[3], 10);
+    if (mon >= 1 && mon <= 12 && day >= 1 && day <= 31) {
+      return `${yr}-${String(mon).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    }
+  }
+
+  // 5. Fallback: let the JS Date constructor try (last resort)
   const p = new Date(s);
-  if (!isNaN(p)) return `${p.getFullYear()}-${String(p.getMonth()+1).padStart(2,'0')}-${String(p.getDate()).padStart(2,'0')}`;
-  return '';
-} 
+  if (!isNaN(p.getTime())) {
+    return `${p.getFullYear()}-${String(p.getMonth()+1).padStart(2,'0')}-${String(p.getDate()).padStart(2,'0')}`;
+  }
+
+  return ''; // unparseable
+}
+
 function fmtDOJ(ymd) {
   if (!ymd) return '—';
   const m = ymd.match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -798,9 +830,9 @@ function renderSummary(){
     if(res) wgCrew[wk].add(res);
     if(type==='manpower')mpCount.mp++; else if(type==='equipment')mpCount.eq++; else mpCount.nf++;
   });
-  const inRange = r=>{ const d=parseRowDate(r.DATE); return d&&toKey(d)>=toKey(start)&&toKey(d)<=toKey(end); };
-  const totalCrew=new Set(DATA.filter(inRange).map(r=>r['RESOURCE ID']).filter(Boolean)).size;
-  const totalFore=new Set(DATA.filter(inRange).map(r=>r['FOREMAN ID']).filter(Boolean)).size;
+  const inRange = r=>{ const d=parseRowDate(r.DATE); return d&&toKey(d)>=toKey(start)&&toKey(d)<=toKey(end)&&r['RESOURCE ID']; };
+  const totalCrew=new Set(DATA.filter(inRange).map(r=>r['RESOURCE ID'])).size;
+  const totalFore=new Set(DATA.filter(r=>{ const d=parseRowDate(r.DATE); return d&&toKey(d)>=toKey(start)&&toKey(d)<=toKey(end); }).map(r=>r['FOREMAN ID']).filter(Boolean)).size;
   const activeDays=Object.values(actByDay).filter(d=>d.active).length;
   const totalAreas=Object.keys(areaCrew).length;
   document.getElementById('sum-stats-bar').innerHTML = buildStatsBar([{label:'', pills:[
@@ -1151,11 +1183,7 @@ function renderResource(){
   document.getElementById('res-tables').innerHTML=mkT('Manpower',mp,'badge-mp','Manpower')+mkT('Equipment',eq,'badge-eq','Equipment')+mkT('Unclassified',nf,'badge-nf','Other');
 }
 
-/* ══════════════════════════════════════════════════════
-   CAMP — LOAD
-   ★ Added: 'dor' field (Date of Release) — parsed the
-     same way as 'doj' using parseDOJ()
-══════════════════════════════════════════════════════ */
+/* ══ CAMP — LOAD ══ */
 async function campLoadData() {
   document.getElementById('camp-tbody').innerHTML=`<tr><td colspan="11" style="text-align:center;padding:40px"><div class="spinner" style="margin:0 auto"></div></td></tr>`;
   try {
@@ -1170,7 +1198,6 @@ async function campLoadData() {
       cat:   String(r['Category']||r['CATEGORY']||''),
       nat:   String(r['Nationality']||r['NATIONALITY']||''),
       doj:   parseDOJ(r['Date of Joining']||r['DATE OF JOINING']||r['DOJ']||''),
-      // ★ NEW: Date of Release — reads multiple possible column name variants
       dor:   parseDOJ(r['Date of Release']||r['DATE OF RELEASE']||r['DOR']||r['Release Date']||r['RELEASE DATE']||''),
       camp:  String(r['Camp']||r['CAMP']||''),
       status:String(r['Status']||r['STATUS']||''),
@@ -1238,7 +1265,6 @@ function campFilterRender() {
     if(fCat !=='all'&&r.cat   !==fCat)  return false;
     if(fStat!=='all'&&r.status!==fStat) return false;
     if(fNat !=='all'&&r.nat   !==fNat)  return false;
-    // ★ Search also covers the dor field
     if(q){ const hay=`${r.id} ${r.name} ${r.desig} ${r.cat} ${r.nat} ${r.doj} ${r.dor} ${r.camp} ${r.status}`.toLowerCase(); if(!hay.includes(q))return false; }
     return true;
   });
@@ -1256,13 +1282,7 @@ function campStatusBadge(s){ const m={'POB':'s-pob','POB-A':'s-pob-a','POB-B':'s
 function campCatBadge(c){ if(c==='Manpower')return `<span class="cat-mp">Manpower</span>`; if(c==='Equipment')return `<span class="cat-eq">Equipment</span>`; return `<span class="cat-def">${escHtml(c||'—')}</span>`; }
 function campNatBadge(n){ if(n==='Expats')return `<span class="nat-exp">Expats</span>`; if(n==='Nationals')return `<span class="nat-nat">Nationals</span>`; return `<span class="cat-def">${escHtml(n||'—')}</span>`; }
 
-/* ══════════════════════════════════════════════════════
-   CAMP ROW HTML
-   ★ Added "Date of Release" cell between DOJ and Camp:
-     - View mode  : displays fmtDOJ(r.dor) (same as DOJ)
-     - Edit mode  : date input pre-filled with r.dor
-   ★ colspan for no-data / spinner rows updated to 11
-══════════════════════════════════════════════════════ */
+/* ══ CAMP ROW HTML ══ */
 function campRowHTML(r,idx){
   const rid=r._row;
   const statusOpts=['POB','POB-A','POB-B','POB-C','POB-D','POL','POR'].map(o=>`<option ${r.status===o?'selected':''}>${o}</option>`).join('');
@@ -1275,7 +1295,6 @@ function campRowHTML(r,idx){
     <td><span class="cell-view">${campCatBadge(r.cat)}</span><select class="inline-input cell-edit" id="ci-cat-${rid}" style="min-width:110px"><option value="">— Select —</option><option ${r.cat==='Manpower'?'selected':''}>Manpower</option><option ${r.cat==='Equipment'?'selected':''}>Equipment</option></select></td>
     <td><span class="cell-view">${campNatBadge(r.nat)}</span><select class="inline-input cell-edit" id="ci-nat-${rid}" style="min-width:110px"><option value="">— Select —</option><option ${r.nat==='Expats'?'selected':''}>Expats</option><option ${r.nat==='Nationals'?'selected':''}>Nationals</option></select></td>
     <td><span class="cell-view mono">${fmtDOJ(r.doj)}</span><input class="inline-input cell-edit" id="ci-doj-${rid}" type="date" value="${escHtml(r.doj)}" style="min-width:140px"></td>
-    <!-- ★ NEW: Date of Release column -->
     <td><span class="cell-view mono">${fmtDOJ(r.dor)}</span><input class="inline-input cell-edit" id="ci-dor-${rid}" type="date" value="${escHtml(r.dor)}" style="min-width:140px"></td>
     <td><span class="cell-view">${escHtml(r.camp)}</span><select class="inline-input cell-edit" id="ci-camp-${rid}" style="min-width:120px"><option value="">— Select —</option><option ${r.camp==='Safah'?'selected':''}>Safah</option><option ${r.camp==='Wadi Latham'?'selected':''}>Wadi Latham</option></select></td>
     <td><span class="cell-view">${campStatusBadge(r.status)}</span><select class="inline-input cell-edit" id="ci-status-${rid}" style="min-width:100px"><option value="">— Select —</option>${statusOpts}</select></td>
@@ -1298,10 +1317,7 @@ function campRowHTML(r,idx){
 function campEditRow(rid){ const tr=document.getElementById('camp-row-'+rid); if(tr)tr.classList.add('editing'); }
 function campCancelEdit(rid,isNew){ if(isNew){ const tr=document.getElementById('camp-row-'+rid); if(tr)tr.remove(); return; } const tr=document.getElementById('camp-row-'+rid); if(tr)tr.classList.remove('editing'); }
 
-/* ══════════════════════════════════════════════════════
-   CAMP ADD ROW
-   ★ Added ci-dor input between DOJ and Camp inputs
-══════════════════════════════════════════════════════ */
+/* ══ CAMP ADD ROW ══ */
 function campAddRow(){
   campNewRowCounter--;
   const tid='new_'+Math.abs(campNewRowCounter);
@@ -1317,7 +1333,6 @@ function campAddRow(){
     <td><select class="inline-input cell-edit" id="ci-cat-${tid}" style="min-width:110px"><option value="">— Category —</option><option>Manpower</option><option>Equipment</option></select></td>
     <td><select class="inline-input cell-edit" id="ci-nat-${tid}" style="min-width:110px"><option value="">— Nationality —</option><option>Expats</option><option>Nationals</option></select></td>
     <td><input class="inline-input cell-edit" id="ci-doj-${tid}" type="date" style="min-width:140px"></td>
-    <!-- ★ NEW: Date of Release input for new row -->
     <td><input class="inline-input cell-edit" id="ci-dor-${tid}" type="date" style="min-width:140px"></td>
     <td><select class="inline-input cell-edit" id="ci-camp-${tid}" style="min-width:120px"><option value="">— Camp —</option><option>Safah</option><option>Wadi Latham</option></select></td>
     <td><select class="inline-input cell-edit" id="ci-status-${tid}" style="min-width:100px"><option value="">— Status —</option>${statusOpts}</select></td>
@@ -1334,17 +1349,12 @@ function campAddRow(){
   document.getElementById('ci-id-'+tid).focus();
 }
 
-/* ══════════════════════════════════════════════════════
-   CAMP SAVE
-   ★ Reads ci-dor value and includes 'Date of Release'
-     in both the add and update payloads sent to the
-     Google Apps Script web app
-══════════════════════════════════════════════════════ */
+/* ══ CAMP SAVE ══ */
 async function campSaveRow(rid,isNew){
   const g=id=>{ const el=document.getElementById(id); return el?el.value.trim():''; };
   const empId=g(`ci-id-${rid}`),name=g(`ci-name-${rid}`),desig=g(`ci-desig-${rid}`);
   const cat=g(`ci-cat-${rid}`),nat=g(`ci-nat-${rid}`),doj=g(`ci-doj-${rid}`);
-  const dor=g(`ci-dor-${rid}`); // ★ NEW: Date of Release value
+  const dor=g(`ci-dor-${rid}`);
   const camp=g(`ci-camp-${rid}`),status=g(`ci-status-${rid}`);
   if(!name)  { campToast('Employee Name is required','error'); return; }
   if(!cat)   { campToast('Please select a Category','error');  return; }
@@ -1376,11 +1386,7 @@ async function campDeleteRow(rid){
   } catch(e){ console.error(e); campToast('Delete failed: '+e.message,'error'); if(tr)tr.classList.remove('saving'); }
 }
 
-/* ══════════════════════════════════════════════════════
-   CAMP EXCEL EXPORT
-   ★ Added 'Date of Release' column after 'Date of Joining'
-     in All Employees, Safah, and Wadi Latham sheets
-══════════════════════════════════════════════════════ */
+/* ══ CAMP EXCEL EXPORT ══ */
 function exportCampExcel(){
   if(!campAllRows.length){alert('No data to export.');return;}
   const hdr=['#','ID','Employee Name','Designation','Category','Nationality','Date of Joining','Date of Release','Camp','Status'];
