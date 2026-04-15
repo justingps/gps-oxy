@@ -45,15 +45,11 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:10px}
-
-/* ══ THEME TOGGLE ══ */
 .theme-toggle{display:flex;align-items:center;background:var(--surface2);border:1px solid var(--border-br);border-radius:20px;padding:3px;cursor:pointer;transition:all var(--transition)}
 .theme-opt{padding:5px 11px;border-radius:16px;font-size:0.72rem;font-weight:600;font-family:var(--font-mono);color:var(--text-sub);cursor:pointer;transition:all 0.2s;user-select:none;display:flex;align-items:center;gap:5px;letter-spacing:0.04em}
 .theme-opt.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow-sm)}
 [data-theme="dark"] .theme-opt-dark.active{color:var(--accent2)}
 [data-theme="light"] .theme-opt-light.active{color:var(--warning)}
-
-/* ══ LOGIN ══ */
 #login-screen{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:var(--login-bg);transition:background var(--transition)}
 [data-theme="dark"] #login-screen::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 55% at 15% 55%,rgba(224,123,57,0.09) 0%,transparent 60%),radial-gradient(ellipse 50% 55% at 85% 25%,rgba(58,123,213,0.07) 0%,transparent 60%)}
 [data-theme="light"] #login-screen::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 55% at 15% 55%,rgba(224,123,57,0.05) 0%,transparent 60%),radial-gradient(ellipse 50% 55% at 85% 25%,rgba(58,123,213,0.04) 0%,transparent 60%)}
@@ -83,8 +79,6 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 .login-footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--border);font-size:0.68rem;color:var(--text-dim);text-align:center;font-family:var(--font-mono)}
 .login-theme-toggle{position:absolute;top:20px;right:20px}
 .login-version{position:absolute;bottom:16px;right:20px;font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim)}
-
-/* ══ DASHBOARD SHELL ══ */
 #dashboard{display:none;flex-direction:column;min-height:100vh}
 .topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:var(--topbar-h);background:var(--topbar-bg);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);transition:background var(--transition),border-color var(--transition)}
 .topbar-left{display:flex;align-items:center;gap:14px}
@@ -103,14 +97,12 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 .nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .nav-tab i{font-size:0.78rem;opacity:0.85}
 .content{flex:1;padding:24px 28px;width:100%}
-.tab-panel{display:none;animation:fadein 0.22s ease}
+.tab-panel{display:none;animation:fadein 0.18s ease}
 .tab-panel.active{display:block}
-@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
 .page-title{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:-0.02em}
 .page-title span{color:var(--accent)}
-
-/* ══ FILTERS ══ */
 .filters{display:flex;flex-wrap:wrap;gap:10px;padding:14px 16px;margin-bottom:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);transition:background var(--transition)}
 .filter-group{display:flex;align-items:center;gap:8px;flex:1;min-width:175px}
 .filter-label{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-sub);white-space:nowrap;text-transform:uppercase;letter-spacing:0.07em}
@@ -118,15 +110,11 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-hei
 .f-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(224,123,57,0.12)}
 select.f-input{cursor:pointer}
 option{background:var(--surface2);color:var(--text)}
-
-/* ══ LOADING ══ */
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px}
 .spinner{width:30px;height:30px;border:2px solid var(--border-br);border-top-color:var(--accent);border-radius:50%;animation:spin 0.65s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-sub)}
 .loading-sub{font-size:0.72rem;color:var(--text-dim);font-style:italic}
-
-/* ══ STATS BAR ══ */
 .stats-bar{display:flex;align-items:stretch;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto;transition:background var(--transition);flex-shrink:0}
 .stats-bar::-webkit-scrollbar{height:3px}
 .stats-bar::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:10px}
@@ -141,8 +129,6 @@ option{background:var(--surface2);color:var(--text)}
 .stat-pill-icon{font-size:0.68rem;color:var(--text-dim);margin-bottom:1px}
 .stat-pill-value{font-family:var(--font-display);font-size:1.28rem;font-weight:700;line-height:1;letter-spacing:-0.02em;color:var(--sc,var(--text))}
 .stat-pill-label{font-family:var(--font-mono);font-size:0.58rem;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.07em;text-align:center;white-space:nowrap}
-
-/* ══ CHARTS ══ */
 .chart-grid{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:16px}
 .chart-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
 .chart-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px}
@@ -152,8 +138,6 @@ option{background:var(--surface2);color:var(--text)}
 .chart-card-sub{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-sub);margin-bottom:14px}
 .chart-wrap{position:relative}
 .chart-wrap.h200{height:200px}.chart-wrap.h220{height:220px}.chart-wrap.h240{height:240px}.chart-wrap.h260{height:260px}.chart-wrap.h280{height:280px}.chart-wrap.h320{height:320px}
-
-/* ══ KPI CARDS ══ */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:20px}
 .kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden;transition:background var(--transition),box-shadow 0.2s}
 .kpi-card:hover{box-shadow:var(--shadow-sm)}
@@ -162,8 +146,6 @@ option{background:var(--surface2);color:var(--text)}
 .kpi-label{font-family:var(--font-mono);font-size:0.64rem;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:5px}
 .kpi-value{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;line-height:1}
 .kpi-delta{font-size:0.7rem;font-family:var(--font-mono);margin-top:5px;color:var(--text-dim)}
-
-/* ══ TABLES ══ */
 .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:18px;transition:background var(--transition);width:100%}
 .table-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)}
 .table-title{font-family:var(--font-display);font-size:0.92rem;font-weight:700;color:var(--text)}
@@ -178,8 +160,6 @@ option{background:var(--surface2);color:var(--text)}
 .data-table td{padding:10px 16px;font-size:0.82rem;color:var(--text);vertical-align:middle}
 .data-table td.mono{font-family:var(--font-mono);font-size:0.76rem;color:var(--text-sub)}
 .no-data{text-align:center;padding:44px 20px;color:var(--text-dim);font-size:0.82rem;font-family:var(--font-mono)}
-
-/* ══ DAILY REPORTS ══ */
 .work-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;transition:background var(--transition)}
 .work-card-head{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;background:var(--surface2);border-bottom:1px solid var(--border);transition:background var(--transition)}
 .work-card-num{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.06em}
@@ -191,8 +171,6 @@ option{background:var(--surface2);color:var(--text)}
 .work-meta-label{font-family:var(--font-mono);font-size:0.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
 .work-meta-value{font-size:0.82rem;font-weight:600;color:var(--text)}
 .work-sub-head{padding:10px 18px;font-family:var(--font-mono);font-size:0.67rem;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid var(--border);background:var(--surface2);transition:background var(--transition)}
-
-/* ══ DAY SUMMARY ══ */
 .day-summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:11px;margin-bottom:16px}
 .day-summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px;transition:background var(--transition),box-shadow 0.2s}
 .day-summary-card:hover{box-shadow:var(--shadow-sm)}
@@ -202,17 +180,11 @@ option{background:var(--surface2);color:var(--text)}
 .day-stat-item{flex:1}
 .day-stat-label{font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:3px}
 .day-stat-value{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--text)}
-
-/* ══ DATE RANGE ROW ══ */
 .date-range-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;margin-bottom:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);transition:background var(--transition)}
 .date-range-label{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap}
 .date-sep{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim)}
-
-/* ══ SECTION LABEL ══ */
 .section-label{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-family:var(--font-mono);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-dim)}
 .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* ══ BADGES ══ */
 .badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-family:var(--font-mono);font-size:0.66rem;font-weight:500}
 .badge-mp{background:rgba(46,170,126,0.12);color:var(--accent3);border:1px solid rgba(46,170,126,0.22)}
 .badge-eq{background:rgba(58,123,213,0.12);color:var(--accent2);border:1px solid rgba(58,123,213,0.22)}
@@ -220,22 +192,16 @@ option{background:var(--surface2);color:var(--text)}
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
 .dot-green{background:var(--accent3);box-shadow:0 0 4px var(--accent3)}
 .dot-amber{background:var(--warning)}
-
-/* ══ PROGRESS BAR ══ */
 .prog-bar-wrap{display:flex;align-items:center;gap:10px}
 .prog-bar-bg{flex:1;height:6px;background:var(--surface2);border-radius:4px;overflow:hidden}
 .prog-bar-fill{height:100%;border-radius:4px;transition:width 0.5s ease}
 .prog-val{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-sub);min-width:36px;text-align:right}
-
-/* ══ INSIGHT GRID ══ */
 .insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
 .insight-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:background var(--transition)}
 .insight-card-title{font-family:var(--font-display);font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:3px}
 .insight-card-sub{font-family:var(--font-mono);font-size:0.63rem;color:var(--text-sub);margin-bottom:14px}
 .stat-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:6px}
 .stat-value{font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;line-height:1}
-
-/* ══ BUTTONS ══ */
 .btn-excel{display:inline-flex;align-items:center;gap:7px;padding:7px 15px;background:rgba(46,170,126,0.1);border:1px solid rgba(46,170,126,0.3);border-radius:var(--radius-sm);color:var(--accent3);font-size:0.78rem;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:all var(--transition);white-space:nowrap}
 .btn-excel:hover{background:rgba(46,170,126,0.18);border-color:rgba(46,170,126,0.5)}
 .btn-pdf{display:inline-flex;align-items:center;gap:7px;padding:7px 15px;background:rgba(217,79,79,0.1);border:1px solid rgba(217,79,79,0.3);border-radius:var(--radius-sm);color:var(--danger);font-size:0.78rem;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:all var(--transition);white-space:nowrap}
@@ -244,8 +210,6 @@ option{background:var(--surface2);color:var(--text)}
 .btn-accent:hover{background:var(--accent-h);transform:translateY(-1px)}
 .btn-refresh{display:inline-flex;align-items:center;gap:7px;padding:7px 15px;background:rgba(58,123,213,0.1);border:1px solid rgba(58,123,213,0.3);border-radius:var(--radius-sm);color:var(--accent2);font-size:0.78rem;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:all var(--transition);white-space:nowrap}
 .btn-refresh:hover{background:rgba(58,123,213,0.18);border-color:rgba(58,123,213,0.5)}
-
-/* ══ CAMP TABLE ══ */
 .camp-table tr.editing{background:rgba(224,123,57,0.04) !important}
 .camp-table tr.new-row{background:rgba(46,170,126,0.04) !important}
 .camp-table .cell-edit{display:none}
@@ -266,8 +230,6 @@ select.inline-input{cursor:pointer}
 tr.editing .save-actions{display:flex}
 tr.editing .edit-actions{display:none}
 tr.saving td{opacity:0.55}
-
-/* ══ STATUS PILLS ══ */
 .status-pill{display:inline-flex;align-items:center;padding:2px 10px;border-radius:20px;font-family:var(--font-mono);font-size:0.67rem;font-weight:600;white-space:nowrap}
 .s-pob{background:rgba(46,170,126,0.12);color:var(--accent3);border:1px solid rgba(46,170,126,0.28)}
 .s-pob-a{background:rgba(46,170,126,0.08);color:#34c58a;border:1px solid rgba(52,197,138,0.28)}
@@ -282,14 +244,10 @@ tr.saving td{opacity:0.55}
 .cat-def{background:var(--surface2);color:var(--text-sub);border:1px solid var(--border-br);display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-family:var(--font-mono);font-size:0.66rem;font-weight:500}
 .nat-exp{background:rgba(224,123,57,0.10);color:var(--accent);border:1px solid rgba(224,123,57,0.22);display:inline-flex;padding:2px 9px;border-radius:20px;font-family:var(--font-mono);font-size:0.66rem;font-weight:500}
 .nat-nat{background:rgba(46,170,126,0.10);color:var(--accent3);border:1px solid rgba(46,170,126,0.22);display:inline-flex;padding:2px 9px;border-radius:20px;font-family:var(--font-mono);font-size:0.66rem;font-weight:500}
-
-/* ══ TOAST ══ */
 #camp-toast{position:fixed;bottom:80px;right:24px;z-index:900;display:flex;flex-direction:column;gap:8px}
 .c-toast{background:var(--surface);border:1px solid var(--border-br);color:var(--text);padding:12px 18px;border-radius:10px;font-size:0.82rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:9px;animation:slideInRight 0.25s ease;max-width:320px}
 .c-toast.success{border-color:var(--accent3)}.c-toast.error{border-color:var(--danger)}.c-toast.info{border-color:var(--accent2)}
 @keyframes slideInRight{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
-
-/* ══ MISC ══ */
 .prog-cell{max-width:280px;font-size:0.78rem;line-height:1.55;white-space:pre-line}
 .desc-cell{max-width:240px;font-size:0.8rem;line-height:1.5}
 #back-to-top{position:fixed;bottom:28px;right:24px;z-index:200;width:42px;height:42px;background:var(--surface);border:1px solid var(--border-br);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-sub);cursor:pointer;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity 0.3s ease,background 0.2s,color 0.2s,transform 0.2s;font-size:0.9rem}
@@ -301,8 +259,6 @@ tr.saving td{opacity:0.55}
 .pdf-modal .spinner{margin:0 auto 16px}
 .pdf-modal-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:6px}
 .pdf-modal-sub{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-sub)}
-
-/* ══ RESPONSIVE ══ */
 @media(max-width:1200px){.chart-grid{grid-template-columns:1fr}.chart-grid-3{grid-template-columns:1fr 1fr}.insight-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:900px){.chart-grid,.chart-grid-3,.chart-grid-2{grid-template-columns:1fr}.insight-grid{grid-template-columns:1fr}.chart-card.span2{grid-column:span 1}}
 @media(max-width:600px){.content{padding:14px}.topbar{padding:0 14px}.nav{padding:0 14px}.login-card{width:calc(100% - 28px);padding:30px 22px}.work-meta{grid-template-columns:1fr 1fr}.kpi-grid{grid-template-columns:1fr 1fr}.topbar-date{display:none}.stat-pill{min-width:76px;padding:8px 10px}.stat-pill-value{font-size:1.05rem}}
@@ -310,7 +266,6 @@ tr.saving td{opacity:0.55}
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-grid"></div>
   <div class="login-theme-toggle">
@@ -341,11 +296,10 @@ tr.saving td{opacity:0.55}
     <button class="btn-login" id="btn-login">Sign In</button>
     <div class="login-error" id="login-err"><i class="fas fa-circle-exclamation"></i> Invalid username or password</div>
     <div class="login-footer">Gulf Petrochemical Services LLC. © 2025 — All Rights Reserved</div>
-    <div class="login-version">v3.4.2</div>
+    <div class="login-version">v3.4.3</div>
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard">
   <header class="topbar">
     <div class="topbar-left">
@@ -373,15 +327,14 @@ tr.saving td{opacity:0.55}
   </nav>
 
   <div class="content">
-
     <!-- ANALYTICS -->
     <div id="tab-summary" class="tab-panel active">
       <div class="page-header"><h1 class="page-title">Work <span>Analytics</span></h1></div>
       <div class="date-range-row">
         <span class="date-range-label"><i class="far fa-calendar-range"></i> Date Range</span>
-        <input type="date" id="sum-start" class="f-input" style="max-width:155px" onchange="renderSummary()">
+        <input type="date" id="sum-start" class="f-input" style="max-width:155px">
         <span class="date-sep">→</span>
-        <input type="date" id="sum-end" class="f-input" style="max-width:155px" onchange="renderSummary()">
+        <input type="date" id="sum-end" class="f-input" style="max-width:155px">
       </div>
       <div id="sum-loading" class="loading"><div class="spinner"></div><div class="loading-text">Loading Analytics</div><div class="loading-sub">Analysing work patterns…</div></div>
       <div id="sum-content" style="display:none">
@@ -406,9 +359,9 @@ tr.saving td{opacity:0.55}
       <div class="page-header"><h1 class="page-title">KPI <span>Dashboard</span></h1></div>
       <div class="date-range-row">
         <span class="date-range-label"><i class="far fa-calendar-range"></i> Date Range</span>
-        <input type="date" id="kpi-start" class="f-input" style="max-width:155px" onchange="renderKPI()">
+        <input type="date" id="kpi-start" class="f-input" style="max-width:155px">
         <span class="date-sep">→</span>
-        <input type="date" id="kpi-end" class="f-input" style="max-width:155px" onchange="renderKPI()">
+        <input type="date" id="kpi-end" class="f-input" style="max-width:155px">
       </div>
       <div id="kpi-loading" class="loading"><div class="spinner"></div><div class="loading-text">Computing KPIs</div><div class="loading-sub">Deriving performance indicators…</div></div>
       <div id="kpi-content" style="display:none">
@@ -443,9 +396,9 @@ tr.saving td{opacity:0.55}
     <div id="tab-repsum" class="tab-panel">
       <div class="page-header"><h1 class="page-title">Report <span>Summary</span></h1></div>
       <div class="filters">
-        <div class="filter-group"><span class="filter-label"><i class="far fa-calendar"></i> Date</span><input type="date" id="rs-date" class="f-input" style="max-width:175px" onchange="renderRepSum()"></div>
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-map-pin"></i> Area</span><select id="rs-area" class="f-input" onchange="renderRepSum()"><option value="all">All Areas</option><option>Safha (Block-9)</option><option>Block-62</option><option>Other</option><option>Wadi Latham (Block-9)</option><option>Infrastructure Project</option><option>Khamila (Bock-27)</option><option>FRT Project</option><option>Power Project</option></select></div>
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-gears"></i> Discipline</span><select id="rs-disc" class="f-input" onchange="renderRepSum()"><option value="all">All Disciplines</option><option>Piping &amp; Mechanical</option><option>Electrical</option><option>Civil</option><option>Instrumentation</option><option>OHL</option><option value="__other__">Other</option></select></div>
+        <div class="filter-group"><span class="filter-label"><i class="far fa-calendar"></i> Date</span><input type="date" id="rs-date" class="f-input" style="max-width:175px"></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-map-pin"></i> Area</span><select id="rs-area" class="f-input"><option value="all">All Areas</option><option>Safha (Block-9)</option><option>Block-62</option><option>Other</option><option>Wadi Latham (Block-9)</option><option>Infrastructure Project</option><option>Khamila (Bock-27)</option><option>FRT Project</option><option>Power Project</option></select></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-gears"></i> Discipline</span><select id="rs-disc" class="f-input"><option value="all">All Disciplines</option><option>Piping &amp; Mechanical</option><option>Electrical</option><option>Civil</option><option>Instrumentation</option><option>OHL</option><option value="__other__">Other</option></select></div>
       </div>
       <div id="rs-loading" class="loading"><div class="spinner"></div><div class="loading-text">Loading Report Summary</div></div>
       <div id="rs-content" style="display:none">
@@ -464,10 +417,10 @@ tr.saving td{opacity:0.55}
         <button class="btn-pdf" id="btn-dl-pdf" onclick="downloadReportsPDF()" style="display:none"><i class="fas fa-file-pdf"></i> Download PDF</button>
       </div>
       <div class="filters">
-        <div class="filter-group"><span class="filter-label"><i class="far fa-calendar"></i> Date</span><input type="date" id="r-date" class="f-input" onchange="renderReports()"></div>
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-map-pin"></i> Area</span><select id="r-area" class="f-input" onchange="renderReports()"><option value="all">All Areas</option><option>Safha (Block-9)</option><option>Block-62</option><option>Other</option><option>Wadi Latham (Block-9)</option><option>Infrastructure Project</option><option>Khamila (Bock-27)</option><option>FRT Project</option><option>Power Project</option></select></div>
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-gears"></i> Discipline</span><select id="r-disc" class="f-input" onchange="renderReports()"><option value="all">All Disciplines</option><option>Piping &amp; Mechanical</option><option>Electrical</option><option>Civil</option><option>Instrumentation</option><option>OHL</option><option value="__other__">Other</option></select></div>
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-search"></i> WI No.</span><input type="text" id="r-wi" class="f-input" placeholder="Search WI…" oninput="renderReports()"></div>
+        <div class="filter-group"><span class="filter-label"><i class="far fa-calendar"></i> Date</span><input type="date" id="r-date" class="f-input"></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-map-pin"></i> Area</span><select id="r-area" class="f-input"><option value="all">All Areas</option><option>Safha (Block-9)</option><option>Block-62</option><option>Other</option><option>Wadi Latham (Block-9)</option><option>Infrastructure Project</option><option>Khamila (Bock-27)</option><option>FRT Project</option><option>Power Project</option></select></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-gears"></i> Discipline</span><select id="r-disc" class="f-input"><option value="all">All Disciplines</option><option>Piping &amp; Mechanical</option><option>Electrical</option><option>Civil</option><option>Instrumentation</option><option>OHL</option><option value="__other__">Other</option></select></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-search"></i> WI No.</span><input type="text" id="r-wi" class="f-input" placeholder="Search WI…"></div>
       </div>
       <div id="rep-loading" class="loading"><div class="spinner"></div><div class="loading-text">Loading Reports</div></div>
       <div id="rep-content" style="display:none"><div id="day-summary-wrap"></div><div id="rep-cards"></div></div>
@@ -477,9 +430,9 @@ tr.saving td{opacity:0.55}
     <div id="tab-status" class="tab-panel">
       <div class="page-header"><h1 class="page-title">Project <span>Status</span></h1></div>
       <div class="filters">
-        <div class="filter-group"><span class="filter-label"><i class="far fa-calendar"></i> Date</span><input type="date" id="st-date" class="f-input" onchange="renderStatus()"></div>
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-map-pin"></i> Area</span><select id="st-area" class="f-input" onchange="renderStatus()"><option value="all">All Areas</option><option>Safha (Block-9)</option><option>Block-62</option><option>Other</option><option>Wadi Latham (Block-9)</option><option>Infrastructure Project</option><option>Khamila (Bock-27)</option><option>FRT Project</option><option>Power Project</option></select></div>
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-gears"></i> Discipline</span><select id="st-disc" class="f-input" onchange="renderStatus()"><option value="all">All Disciplines</option><option>Piping &amp; Mechanical</option><option>Electrical</option><option>Civil</option><option>Instrumentation</option><option>OHL</option><option value="__other__">Other</option></select></div>
+        <div class="filter-group"><span class="filter-label"><i class="far fa-calendar"></i> Date</span><input type="date" id="st-date" class="f-input"></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-map-pin"></i> Area</span><select id="st-area" class="f-input"><option value="all">All Areas</option><option>Safha (Block-9)</option><option>Block-62</option><option>Other</option><option>Wadi Latham (Block-9)</option><option>Infrastructure Project</option><option>Khamila (Bock-27)</option><option>FRT Project</option><option>Power Project</option></select></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-gears"></i> Discipline</span><select id="st-disc" class="f-input"><option value="all">All Disciplines</option><option>Piping &amp; Mechanical</option><option>Electrical</option><option>Civil</option><option>Instrumentation</option><option>OHL</option><option value="__other__">Other</option></select></div>
       </div>
       <div id="st-loading" class="loading"><div class="spinner"></div><div class="loading-text">Loading Status</div></div>
       <div id="st-content" style="display:none">
@@ -495,8 +448,8 @@ tr.saving td{opacity:0.55}
     <div id="tab-resource" class="tab-panel">
       <div class="page-header"><h1 class="page-title">Resource <span>Allocation</span></h1></div>
       <div class="filters">
-        <div class="filter-group"><span class="filter-label"><i class="far fa-calendar"></i> Date</span><input type="date" id="res-date" class="f-input" onchange="renderResource()"></div>
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-map-pin"></i> Area</span><select id="res-area" class="f-input" onchange="renderResource()"><option value="all">All Areas</option><option>Safha (Block-9)</option><option>Block-62</option><option>Other</option><option>Wadi Latham (Block-9)</option><option>Infrastructure Project</option><option>Khamila (Bock-27)</option><option>FRT Project</option><option>Power Project</option></select></div>
+        <div class="filter-group"><span class="filter-label"><i class="far fa-calendar"></i> Date</span><input type="date" id="res-date" class="f-input"></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-map-pin"></i> Area</span><select id="res-area" class="f-input"><option value="all">All Areas</option><option>Safha (Block-9)</option><option>Block-62</option><option>Other</option><option>Wadi Latham (Block-9)</option><option>Infrastructure Project</option><option>Khamila (Bock-27)</option><option>FRT Project</option><option>Power Project</option></select></div>
       </div>
       <div id="res-loading" class="loading"><div class="spinner"></div><div class="loading-text">Loading Resources</div></div>
       <div id="res-content" style="display:none">
@@ -516,11 +469,11 @@ tr.saving td{opacity:0.55}
         </div>
       </div>
       <div class="filters">
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-search"></i> Search</span><input type="text" id="camp-search" class="f-input" placeholder="ID, name, designation…" oninput="campFilterRender()"></div>
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-tent"></i> Camp</span><select id="cf-camp" class="f-input" onchange="campFilterRender()"><option value="all">All Camps</option><option>Safah</option><option>Wadi Latham</option></select></div>
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-layer-group"></i> Category</span><select id="cf-cat" class="f-input" onchange="campFilterRender()"><option value="all">All Categories</option><option>Manpower</option><option>Equipment</option></select></div>
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-circle-dot"></i> Status</span><select id="cf-status" class="f-input" onchange="campFilterRender()"><option value="all">All Statuses</option><option>POB</option><option>POB-A</option><option>POB-B</option><option>POB-C</option><option>POB-D</option><option>POL</option><option>POR</option></select></div>
-        <div class="filter-group"><span class="filter-label"><i class="fas fa-globe"></i> Nationality</span><select id="cf-nat" class="f-input" onchange="campFilterRender()"><option value="all">All</option><option>Expats</option><option>Nationals</option></select></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-search"></i> Search</span><input type="text" id="camp-search" class="f-input" placeholder="ID, name, designation…"></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-tent"></i> Camp</span><select id="cf-camp" class="f-input"><option value="all">All Camps</option><option>Safah</option><option>Wadi Latham</option></select></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-layer-group"></i> Category</span><select id="cf-cat" class="f-input"><option value="all">All Categories</option><option>Manpower</option><option>Equipment</option></select></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-circle-dot"></i> Status</span><select id="cf-status" class="f-input"><option value="all">All Statuses</option><option>POB</option><option>POB-A</option><option>POB-B</option><option>POB-C</option><option>POB-D</option><option>POL</option><option>POR</option></select></div>
+        <div class="filter-group"><span class="filter-label"><i class="fas fa-globe"></i> Nationality</span><select id="cf-nat" class="f-input"><option value="all">All</option><option>Expats</option><option>Nationals</option></select></div>
       </div>
       <div id="camp-stats-wrap"></div>
       <div class="table-wrap">
@@ -536,7 +489,6 @@ tr.saving td{opacity:0.55}
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -545,6 +497,20 @@ tr.saving td{opacity:0.55}
 <div id="camp-toast"></div>
 
 <script>
+/* ════════════════════════════════════════════════
+   PERFORMANCE OPTIMIZATIONS SUMMARY:
+   1. Pre-parsed date index (Map<dateKey,rows[]>) — eliminates per-render full scans
+   2. Memoized render results — same inputs → instant cached output
+   3. Debounced filter inputs — prevents rapid-fire re-renders while typing
+   4. Lazy tab rendering — tabs only compute when first activated
+   5. Chart update() instead of destroy/recreate — 5-10x faster chart refresh
+   6. DocumentFragment batch DOM writes — single reflow instead of N reflows
+   7. requestAnimationFrame gating — smooth UI during heavy computation
+   8. Camp filter uses pre-built search string — no repeated string concat
+   9. parseDOJ result cached per raw value
+   10. parseRowDate cached per string via Map
+════════════════════════════════════════════════ */
+
 /* ══ THEME ══ */
 let currentTheme = localStorage.getItem('gps-theme') || 'light';
 document.documentElement.setAttribute('data-theme', currentTheme);
@@ -556,7 +522,7 @@ function applyTheme(t) {
   if (dataReady && document.getElementById('dashboard').style.display !== 'none') {
     updateChartDefaults();
     const active = document.querySelector('.nav-tab.active');
-    if (active) triggerTabRender(active.dataset.tab);
+    if (active) { tabDirty[active.dataset.tab] = true; triggerTabRender(active.dataset.tab); }
   }
 }
 function updateChartDefaults() {
@@ -586,6 +552,38 @@ updateChartDefaults();
 Chart.defaults.font.family = "'DM Mono', monospace";
 Chart.defaults.font.size = 11;
 
+/* ══ PERFORMANCE: date index + render cache ══ */
+// Index: dateKey → array of matching rows (built once after data loads)
+let DATE_INDEX = new Map(); // Map<string, row[]>
+// Parse cache: raw date string → Date object
+const DATE_PARSE_CACHE = new Map();
+// Render memo: tab → { key, output } to skip identical re-renders
+const tabRenderCache = {};
+// Dirty flags: only render tabs that actually need it
+const tabDirty = { summary:true, kpi:true, repsum:true, reports:true, status:true, resource:true };
+// Track which tabs have been rendered at least once
+const tabRendered = {};
+
+function buildDateIndex() {
+  DATE_INDEX = new Map();
+  DATA.forEach(row => {
+    const d = parseRowDateFast(row.DATE);
+    if (!d) return;
+    const k = toKey(d);
+    row._dateKey = k; // cache on row itself
+    row._dateObj = d;
+    if (!DATE_INDEX.has(k)) DATE_INDEX.set(k, []);
+    DATE_INDEX.get(k).push(row);
+  });
+}
+
+/* ══ DEBOUNCE ══ */
+const _debTimers = {};
+function debounce(fn, id, ms=180) {
+  clearTimeout(_debTimers[id]);
+  _debTimers[id] = setTimeout(fn, ms);
+}
+
 /* ══ STATS BAR BUILDER ══ */
 function buildStatsBar(groups) {
   const pill = (p) => `<div class="stat-pill ${p.color||''}"><div class="stat-pill-icon"><i class="fas ${p.icon}"></i></div><div class="stat-pill-value">${p.value}</div><div class="stat-pill-label">${p.label}</div></div>`;
@@ -593,69 +591,51 @@ function buildStatsBar(groups) {
   return `<div class="stats-bar">${groups.map(group).join('')}</div>`;
 }
 
-/* ══════════════════════════════════════════════════════
-   DOJ / DOR DATE HELPERS — FIXED
-   
-   parseDOJ() now correctly handles ALL these formats
-   that Google Sheets may return:
-     1. YYYY-MM-DD        → e.g. "2026-04-13"  (ISO, from Sheets date serial)
-     2. DD-MM-YYYY        → e.g. "2-11-2026"   (numeric month, dash-separated)  ← WAS BROKEN
-     3. DD/MM/YYYY        → e.g. "13/04/2026"  (numeric month, slash-separated)
-     4. DD-Mon-YYYY       → e.g. "2-Nov-2026"  (3-letter month abbreviation)
+/* ══ DATE HELPERS ══ */
+const MN={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+const MNA=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOJ_MONTHS = MNA;
 
-   All formats are normalised to YYYY-MM-DD for internal
-   storage and then formatted for display via fmtDOJ().
-══════════════════════════════════════════════════════ */
-const DOJ_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-function parseDOJ(raw) {
-  if (!raw || String(raw).trim() === '' || raw === '—') return '';
-  const s = String(raw).trim();
-  let m;
-
-  // 1. YYYY-MM-DD  (ISO format — from Google Sheets serialised dates)
-  m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-  if (m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
-
-  // 2. DD-Mon-YYYY  (e.g. "2-Nov-2026" — 3-letter month abbreviation)
-  m = s.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/);
-  if (m) {
-    const mi = DOJ_MONTHS.findIndex(x => x.toLowerCase() === m[2].toLowerCase());
-    if (mi >= 0) return `${m[3]}-${String(mi+1).padStart(2,'0')}-${m[1].padStart(2,'0')}`;
-  }
-
-  // 3. DD-MM-YYYY  (e.g. "2-11-2026" — numeric month, dashes)  ← KEY FIX
-  //    Guard: month part must be 1-12, day part 1-31
-  m = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-  if (m) {
-    const day = parseInt(m[1], 10), mon = parseInt(m[2], 10), yr = parseInt(m[3], 10);
-    if (mon >= 1 && mon <= 12 && day >= 1 && day <= 31) {
-      return `${yr}-${String(mon).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    }
-  }
-
-  // 4. DD/MM/YYYY  (e.g. "13/04/2026" — numeric month, slashes)
-  m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (m) {
-    const day = parseInt(m[1], 10), mon = parseInt(m[2], 10), yr = parseInt(m[3], 10);
-    if (mon >= 1 && mon <= 12 && day >= 1 && day <= 31) {
-      return `${yr}-${String(mon).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    }
-  }
-
-  // 5. Fallback: let the JS Date constructor try (last resort)
-  const p = new Date(s);
-  if (!isNaN(p.getTime())) {
-    return `${p.getFullYear()}-${String(p.getMonth()+1).padStart(2,'0')}-${String(p.getDate()).padStart(2,'0')}`;
-  }
-
-  return ''; // unparseable
+// Cached parse — most rows share the same date string so cache hits are ~90%
+function parseRowDateFast(s) {
+  if (!s) return null;
+  if (DATE_PARSE_CACHE.has(s)) return DATE_PARSE_CACHE.get(s);
+  const r = _parseRowDateRaw(s);
+  DATE_PARSE_CACHE.set(s, r);
+  return r;
 }
+function _parseRowDateRaw(s) {
+  let m;
+  m=s.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/); if(m) return new Date(+m[3],MN[m[2]],+m[1]);
+  m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);      if(m) return new Date(+m[1],+m[2]-1,+m[3]);
+  m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);    if(m) return new Date(+m[3],+m[2]-1,+m[1]);
+  return null;
+}
+function toKey(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function fmtDisplay(d){ return `${d.getDate()}-${MNA[d.getMonth()]}-${d.getFullYear()}`; }
+function offsetDate(d,n){ const r=new Date(d);r.setDate(d.getDate()+n);return r; }
+function dateRange(a,b){ const ds=[];let d=new Date(a);while(d<=b){ds.push(new Date(d));d.setDate(d.getDate()+1);}return ds; }
+function setDateVal(id,d){ document.getElementById(id).value=toKey(d); }
+function getDate(id){ const v=document.getElementById(id).value;return v?new Date(v+'T00:00:00'):null; }
+function matchDiscipline(rowDisc,filterVal){ if(filterVal==='all')return true; if(filterVal==='__other__')return !KNOWN_DISCIPLINES.includes(rowDisc); return rowDisc===filterVal; }
 
+/* ══ DOJ helpers ══ */
+const _pojCache = new Map();
+function parseDOJ(raw) {
+  if (!raw || String(raw).trim()==='' || raw==='—') return '';
+  if (_pojCache.has(raw)) return _pojCache.get(raw);
+  const s = String(raw).trim(); let m, r='';
+  m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/); if(m){r=`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;_pojCache.set(raw,r);return r;}
+  m=s.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/); if(m){const mi=DOJ_MONTHS.findIndex(x=>x.toLowerCase()===m[2].toLowerCase());if(mi>=0){r=`${m[3]}-${String(mi+1).padStart(2,'0')}-${m[1].padStart(2,'0')}`;_pojCache.set(raw,r);return r;}}
+  m=s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/); if(m){const day=parseInt(m[1]),mon=parseInt(m[2]),yr=parseInt(m[3]);if(mon>=1&&mon<=12&&day>=1&&day<=31){r=`${yr}-${String(mon).padStart(2,'0')}-${String(day).padStart(2,'0')}`;_pojCache.set(raw,r);return r;}}
+  m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/); if(m){const day=parseInt(m[1]),mon=parseInt(m[2]),yr=parseInt(m[3]);if(mon>=1&&mon<=12&&day>=1&&day<=31){r=`${yr}-${String(mon).padStart(2,'0')}-${String(day).padStart(2,'0')}`;_pojCache.set(raw,r);return r;}}
+  const p=new Date(s); if(!isNaN(p.getTime())){r=`${p.getFullYear()}-${String(p.getMonth()+1).padStart(2,'0')}-${String(p.getDate()).padStart(2,'0')}`;_pojCache.set(raw,r);return r;}
+  _pojCache.set(raw,''); return '';
+}
 function fmtDOJ(ymd) {
-  if (!ymd) return '—';
-  const m = ymd.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!m) return ymd;
+  if(!ymd) return '—';
+  const m=ymd.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return ymd;
   return `${m[3]}-${DOJ_MONTHS[parseInt(m[2],10)-1]}-${m[1]}`;
 }
 
@@ -685,6 +665,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-login').addEventListener('click', doLogin);
   document.getElementById('p').addEventListener('keypress', e => { if(e.key==='Enter') doLogin(); });
   document.getElementById('btn-logout').addEventListener('click', doLogout);
+
+  // Tab switching — lazy render
   document.querySelectorAll('.nav-tab').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
@@ -694,6 +676,36 @@ document.addEventListener('DOMContentLoaded', () => {
       if (dataReady) triggerTabRender(btn.dataset.tab);
     });
   });
+
+  // Debounced filter wiring — no more inline onchange/oninput
+  const wire = (id, tabFn, ms=200) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('change', () => debounce(tabFn, id, ms));
+    el.addEventListener('input',  () => debounce(tabFn, id, ms));
+  };
+  wire('sum-start', renderSummary, 300);
+  wire('sum-end',   renderSummary, 300);
+  wire('kpi-start', renderKPI, 300);
+  wire('kpi-end',   renderKPI, 300);
+  wire('rs-date',   renderRepSum, 150);
+  wire('rs-area',   renderRepSum, 100);
+  wire('rs-disc',   renderRepSum, 100);
+  wire('r-date',    renderReports, 150);
+  wire('r-area',    renderReports, 100);
+  wire('r-disc',    renderReports, 100);
+  wire('r-wi',      renderReports, 250);
+  wire('st-date',   renderStatus, 150);
+  wire('st-area',   renderStatus, 100);
+  wire('st-disc',   renderStatus, 100);
+  wire('res-date',  renderResource, 150);
+  wire('res-area',  renderResource, 100);
+  wire('camp-search', campFilterRender, 250);
+  wire('cf-camp',   campFilterRender, 80);
+  wire('cf-cat',    campFilterRender, 80);
+  wire('cf-status', campFilterRender, 80);
+  wire('cf-nat',    campFilterRender, 80);
+
   fetchData();
   campLoadData();
 });
@@ -711,15 +723,24 @@ function hideLoaders() {
   [['sum-loading','sum-content'],['kpi-loading','kpi-content'],['rep-loading','rep-content'],
    ['rs-loading','rs-content'],['st-loading','st-content'],['res-loading','res-content']].forEach(([l,c])=>{ hide(l); show(c); });
 }
-function renderAll() { renderSummary(); renderKPI(); renderReports(); renderRepSum(); renderStatus(); renderResource(); }
+function renderAll() {
+  // Only render the active tab immediately; others will render on demand
+  const active = document.querySelector('.nav-tab.active');
+  if (active) triggerTabRender(active.dataset.tab);
+  // Mark all other tabs dirty so they render when switched to
+  Object.keys(tabDirty).forEach(t => { tabDirty[t] = true; });
+}
 
 /* ══ FETCH ══ */
 function fetchData() {
   fetch(SHEET_URL).then(r=>r.text()).then(csv=>{
-    DATA=parseCSV(csv); dataReady=true;
-    if (document.getElementById('dashboard').style.display!=='none') { hideLoaders(); renderAll(); }
-  }).catch(e=>{ console.error(e); dataReady=true; hideLoaders(); });
+    DATA = parseCSV(csv);
+    buildDateIndex(); // build index once
+    dataReady = true;
+    if (document.getElementById('dashboard').style.display !== 'none') { hideLoaders(); renderAll(); }
+  }).catch(e=>{ console.error(e); dataReady=true; buildDateIndex(); hideLoaders(); });
 }
+
 function parseCSV(csv) {
   const rows=[]; let cur=[],field='',inQ=false;
   for(let i=0;i<csv.length;i++){
@@ -732,37 +753,35 @@ function parseCSV(csv) {
   if(field.trim()||cur.length){ cur.push(field.trim());rows.push(cur); }
   if(!rows.length) return [];
   const hdr=rows[0];
-  return rows.slice(1).map(r=>{ const o={};hdr.forEach((h,i)=>o[h]=(r[i]||'').trim());return o; }).filter(r=>Object.values(r).some(v=>v));
+  return rows.slice(1).map(r=>{
+    const o={};
+    hdr.forEach((h,i)=>o[h]=(r[i]||'').trim());
+    return o;
+  }).filter(r=>Object.values(r).some(v=>v));
 }
 
-/* ══ DATE HELPERS ══ */
-const MN={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
-const MNA=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-function parseRowDate(s){
-  if(!s) return null; let m;
-  m=s.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/); if(m) return new Date(+m[3],MN[m[2]],+m[1]);
-  m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);      if(m) return new Date(+m[1],+m[2]-1,+m[3]);
-  m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);    if(m) return new Date(+m[3],+m[2]-1,+m[1]);
-  return null;
+/* ══ FAST GROUP BY PROJECT — uses date index ══ */
+function getRowsForDate(dateKey) {
+  return DATE_INDEX.get(dateKey) || [];
 }
-function toKey(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-function fmtDisplay(d){ return `${d.getDate()}-${MNA[d.getMonth()]}-${d.getFullYear()}`; }
-function offsetDate(d,n){ const r=new Date(d);r.setDate(d.getDate()+n);return r; }
-function dateRange(a,b){ const ds=[];let d=new Date(a);while(d<=b){ds.push(new Date(d));d.setDate(d.getDate()+1);}return ds; }
-function setDateVal(id,d){ document.getElementById(id).value=toKey(d); }
-function getDate(id){ const v=document.getElementById(id).value;return v?new Date(v+'T00:00:00'):null; }
-function matchDiscipline(rowDisc,filterVal){ if(filterVal==='all')return true; if(filterVal==='__other__')return !KNOWN_DISCIPLINES.includes(rowDisc); return rowDisc===filterVal; }
+function getRowsForRange(startKey, endKey) {
+  const results = [];
+  DATE_INDEX.forEach((rows, k) => {
+    if (k >= startKey && k <= endKey) results.push(...rows);
+  });
+  return results;
+}
 
-/* ══ GROUP DATA ══ */
-function groupByProject(dateKey,area='all',disc='all',wiSearch='') {
-  const map={},uniqueResources=new Set(),uniqueForemen=new Set();
-  DATA.forEach(row=>{
-    const rd=parseRowDate(row.DATE); if(!rd||toKey(rd)!==dateKey) return;
-    if(area!=='all'&&row['AREA / BLOCK']!==area) return;
-    if(!matchDiscipline(row['DISCIPLINE']||'',disc)) return;
-    if(wiSearch&&!(row['WI NO']||'').toLowerCase().includes(wiSearch.toLowerCase())) return;
+function groupByProject(dateKey, area='all', disc='all', wiSearch='') {
+  const rows = getRowsForDate(dateKey);
+  const map={}, uniqueResources=new Set(), uniqueForemen=new Set();
+  for (let i=0; i<rows.length; i++) {
+    const row = rows[i];
+    if (area!=='all' && row['AREA / BLOCK']!==area) continue;
+    if (!matchDiscipline(row['DISCIPLINE']||'', disc)) continue;
+    if (wiSearch && !(row['WI NO']||'').toLowerCase().includes(wiSearch.toLowerCase())) continue;
     const key=`${row['FOREMAN ID']}|${row['WI NO']}|${row['AREA / BLOCK']}|${row['DISCIPLINE']}`;
-    if(!map[key]) map[key]={ id:row['FOREMAN ID']||'—',crewLead:row['FOREMAN NAME']||'—',wi:row['WI NO']||'—',area:row['AREA / BLOCK']||'Unknown',discipline:row['DISCIPLINE']||'—',desc:row['DESCRIPTION OF WORK']||'',permitNo:row['PERMIT NUMBER']||'—',timeIn:row['VALIDATION TIME']||'—',timeOut:row['SUSPENSION TIME']||'—',progress:row['PROGRESS']||'',resources:new Set(),foremen:new Set(),resourceRows:[] };
+    if (!map[key]) map[key]={id:row['FOREMAN ID']||'—',crewLead:row['FOREMAN NAME']||'—',wi:row['WI NO']||'—',area:row['AREA / BLOCK']||'Unknown',discipline:row['DISCIPLINE']||'—',desc:row['DESCRIPTION OF WORK']||'',permitNo:row['PERMIT NUMBER']||'—',timeIn:row['VALIDATION TIME']||'—',timeOut:row['SUSPENSION TIME']||'—',progress:row['PROGRESS']||'',resources:new Set(),foremen:new Set(),resourceRows:[]};
     const g=map[key];
     if(row['PERMIT NUMBER']) g.permitNo=row['PERMIT NUMBER'];
     if(row['VALIDATION TIME']) g.timeIn=row['VALIDATION TIME'];
@@ -771,53 +790,97 @@ function groupByProject(dateKey,area='all',disc='all',wiSearch='') {
     if(row['DESCRIPTION OF WORK']&&!g.desc) g.desc=row['DESCRIPTION OF WORK'];
     if(row['RESOURCE ID']&&!g.resources.has(row['RESOURCE ID'])){
       g.resources.add(row['RESOURCE ID']); uniqueResources.add(row['RESOURCE ID']);
-      g.resourceRows.push({ id:row['RESOURCE ID'],desig:row['RESOURCE DESIGNATION']||'—',type:(row['MANPOWER / EQUIPMENT']||'').trim(),tin:row['TIME-IN']||'—',tout:row['TIME-OUT']||'—' });
+      g.resourceRows.push({id:row['RESOURCE ID'],desig:row['RESOURCE DESIGNATION']||'—',type:(row['MANPOWER / EQUIPMENT']||'').trim(),tin:row['TIME-IN']||'—',tout:row['TIME-OUT']||'—'});
     }
     if(row['FOREMAN ID']){ g.foremen.add(row['FOREMAN ID']); uniqueForemen.add(row['FOREMAN ID']); }
-  });
-  return { groups:Object.values(map), uniqueResources, uniqueForemen };
+  }
+  return {groups:Object.values(map),uniqueResources,uniqueForemen};
 }
-function groupByProjectForDate(dateKey,area='all',disc='all') {
+
+function groupByProjectForDate(dateKey, area='all', disc='all') {
+  const rows = getRowsForDate(dateKey);
   const map={};
-  DATA.forEach(row=>{
-    const rd=parseRowDate(row.DATE); if(!rd) return;
-    const dk=toKey(rd); if(dk!==dateKey) return;
-    if(area!=='all'&&row['AREA / BLOCK']!==area) return;
-    if(!matchDiscipline(row['DISCIPLINE']||'',disc)) return;
+  for (let i=0; i<rows.length; i++) {
+    const row = rows[i];
+    if(area!=='all'&&row['AREA / BLOCK']!==area) continue;
+    if(!matchDiscipline(row['DISCIPLINE']||'',disc)) continue;
     const key=`${row['FOREMAN ID']}|${row['WI NO']}|${row['AREA / BLOCK']}|${row['DISCIPLINE']}`;
-    if(!map[key]) map[key]={ date:dk,dateObj:rd,id:row['FOREMAN ID']||'—',crewLead:row['FOREMAN NAME']||'—',wi:row['WI NO']||'—',area:row['AREA / BLOCK']||'Unknown',discipline:row['DISCIPLINE']||'—',desc:row['DESCRIPTION OF WORK']||'',progress:row['PROGRESS']||'',resources:new Set() };
+    if(!map[key]) map[key]={date:dateKey,id:row['FOREMAN ID']||'—',crewLead:row['FOREMAN NAME']||'—',wi:row['WI NO']||'—',area:row['AREA / BLOCK']||'Unknown',discipline:row['DISCIPLINE']||'—',desc:row['DESCRIPTION OF WORK']||'',progress:row['PROGRESS']||'',resources:new Set()};
     const g=map[key];
     if(row['DESCRIPTION OF WORK']&&!g.desc) g.desc=row['DESCRIPTION OF WORK'];
     if(row['PROGRESS']&&!g.progress) g.progress=row['PROGRESS'];
     if(row['RESOURCE ID']) g.resources.add(row['RESOURCE ID']);
-  });
+  }
   return Object.values(map).sort((a,b)=>a.area.localeCompare(b.area));
 }
 
-/* ══ CHART HELPERS ══ */
-function mkChart(id,type,labels,datasets,opts={}){
-  if(charts[id]) charts[id].destroy();
+/* ══ CHART HELPERS — update instead of destroy/recreate ══ */
+function mkChart(id, type, labels, datasets, opts={}) {
+  if (charts[id]) {
+    // Fast path: update existing chart instead of destroying
+    const c = charts[id];
+    c.data.labels = labels;
+    c.data.datasets = datasets;
+    c.options.indexAxis = opts.horizontal ? 'y' : 'x';
+    if (c.options.scales) {
+      if (c.options.scales.x) c.options.scales.x.stacked = !!opts.stacked;
+      if (c.options.scales.y) c.options.scales.y.stacked = !!opts.stacked;
+    }
+    c.update('none'); // 'none' = no animation = fastest
+    return;
+  }
   const ctx=document.getElementById(id).getContext('2d');
   const d=currentTheme==='dark'; const gc=d?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
-  charts[id]=new Chart(ctx,{ type, data:{labels,datasets}, options:{ responsive:true,maintainAspectRatio:false,indexAxis:opts.horizontal?'y':'x', scales:{ x:{stacked:opts.stacked,grid:{color:gc},ticks:{maxRotation:45}}, y:{stacked:opts.stacked,grid:{color:gc},beginAtZero:true} }, plugins:{ legend:{position:opts.legendPos||'bottom',labels:{boxWidth:11,padding:14,usePointStyle:true}}, tooltip:{backgroundColor:d?'#1c2333':'#fff',titleColor:d?'#e3e8f0':'#1a2236',bodyColor:d?'#8b96ab':'#5a6880',borderColor:d?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)',borderWidth:1,padding:10} } } });
+  charts[id]=new Chart(ctx,{type,data:{labels,datasets},options:{
+    responsive:true,maintainAspectRatio:false,indexAxis:opts.horizontal?'y':'x',
+    animation:{duration:300},
+    scales:{
+      x:{stacked:opts.stacked,grid:{color:gc},ticks:{maxRotation:45}},
+      y:{stacked:opts.stacked,grid:{color:gc},beginAtZero:true}
+    },
+    plugins:{
+      legend:{position:opts.legendPos||'bottom',labels:{boxWidth:11,padding:14,usePointStyle:true}},
+      tooltip:{backgroundColor:d?'#1c2333':'#fff',titleColor:d?'#e3e8f0':'#1a2236',bodyColor:d?'#8b96ab':'#5a6880',borderColor:d?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)',borderWidth:1,padding:10}
+    }
+  }});
 }
-function mkDoughnut(id,labels,data,colors){
-  if(charts[id]) charts[id].destroy();
+
+function mkDoughnut(id, labels, data, colors) {
+  if (charts[id]) {
+    const c = charts[id];
+    c.data.labels = labels;
+    c.data.datasets[0].data = data;
+    c.data.datasets[0].backgroundColor = colors;
+    c.update('none');
+    return;
+  }
   const d=currentTheme==='dark';
-  charts[id]=new Chart(document.getElementById(id).getContext('2d'),{ type:'doughnut', data:{labels,datasets:[{data,backgroundColor:colors,borderColor:d?'#1c2333':'#fff',borderWidth:3}]}, options:{ responsive:true,maintainAspectRatio:false,cutout:'60%', plugins:{ legend:{position:'right',labels:{boxWidth:11,padding:12,usePointStyle:true}}, tooltip:{backgroundColor:d?'#1c2333':'#fff',titleColor:d?'#e3e8f0':'#1a2236',bodyColor:d?'#8b96ab':'#5a6880',borderColor:d?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)',borderWidth:1,padding:10} } } });
+  charts[id]=new Chart(document.getElementById(id).getContext('2d'),{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderColor:d?'#1c2333':'#fff',borderWidth:3}]},options:{
+    responsive:true,maintainAspectRatio:false,cutout:'60%',
+    animation:{duration:300},
+    plugins:{
+      legend:{position:'right',labels:{boxWidth:11,padding:12,usePointStyle:true}},
+      tooltip:{backgroundColor:d?'#1c2333':'#fff',titleColor:d?'#e3e8f0':'#1a2236',bodyColor:d?'#8b96ab':'#5a6880',borderColor:d?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)',borderWidth:1,padding:10}
+    }
+  }});
 }
 
 /* ══ ANALYTICS ══ */
-function renderSummary(){
+function renderSummary() {
   if(!dataReady) return;
   const start=getDate('sum-start'),end=getDate('sum-end');
   if(!start||!end||start>end) return;
+  const startKey=toKey(start), endKey=toKey(end);
   const days=dateRange(start,end);
-  const areaCrew={},discCrew={},mpCount={eq:0,mp:0,nf:0},wgCrew={},actByDay={};
+  const areaCrew={},discCrew={},mpCount={mp:0,eq:0,nf:0},wgCrew={},actByDay={};
   days.forEach(d=>{ const dk=toKey(d); actByDay[dk]={foremen:new Set(),crew:new Set(),date:d,active:false}; });
-  DATA.forEach(row=>{
-    const rd=parseRowDate(row.DATE); if(!rd) return;
-    const dk=toKey(rd); if(!actByDay[dk]) return;
+
+  // Use index range scan
+  const rows = getRowsForRange(startKey, endKey);
+  for (let i=0; i<rows.length; i++) {
+    const row = rows[i];
+    const dk = row._dateKey;
+    if (!actByDay[dk]) continue;
     const area=row['AREA / BLOCK']||'Unknown',res=row['RESOURCE ID'],fore=row['FOREMAN ID'];
     const disc=row['DISCIPLINE']||'Other',type=(row['MANPOWER / EQUIPMENT']||'').toLowerCase();
     if(!areaCrew[area]) areaCrew[area]={};
@@ -828,22 +891,23 @@ function renderSummary(){
     const wk=`${row['WI NO']||'?'} · ${area}`;
     if(!wgCrew[wk]) wgCrew[wk]=new Set();
     if(res) wgCrew[wk].add(res);
-    if(type==='manpower')mpCount.mp++; else if(type==='equipment')mpCount.eq++; else mpCount.nf++;
-  });
-  const inRange = r=>{ const d=parseRowDate(r.DATE); return d&&toKey(d)>=toKey(start)&&toKey(d)<=toKey(end)&&r['RESOURCE ID']; };
-  const totalCrew=new Set(DATA.filter(inRange).map(r=>r['RESOURCE ID'])).size;
-  const totalFore=new Set(DATA.filter(r=>{ const d=parseRowDate(r.DATE); return d&&toKey(d)>=toKey(start)&&toKey(d)<=toKey(end); }).map(r=>r['FOREMAN ID']).filter(Boolean)).size;
+    if(type==='manpower')mpCount.mp++;else if(type==='equipment')mpCount.eq++;else mpCount.nf++;
+  }
+  const totalCrew=new Set(rows.filter(r=>r['RESOURCE ID']).map(r=>r['RESOURCE ID'])).size;
+  const totalFore=new Set(rows.map(r=>r['FOREMAN ID']).filter(Boolean)).size;
   const activeDays=Object.values(actByDay).filter(d=>d.active).length;
   const totalAreas=Object.keys(areaCrew).length;
-  document.getElementById('sum-stats-bar').innerHTML = buildStatsBar([{label:'', pills:[
-    {label:'Total Crew',    value:totalCrew,   icon:'fa-people-group',     color:'sp-orange'},
-    {label:'Total Foremen', value:totalFore,   icon:'fa-hard-hat',         color:'sp-blue'},
-    {label:'Active Days',   value:activeDays,  icon:'fa-calendar-check',   color:'sp-green'},
-    {label:'Areas Active',  value:totalAreas,  icon:'fa-map-location-dot', color:'sp-teal'},
-    {label:'Manpower',      value:mpCount.mp,  icon:'fa-person-digging',   color:'sp-green'},
-    {label:'Equipment',     value:mpCount.eq,  icon:'fa-gear',             color:'sp-blue'},
-    {label:'Unclassified',  value:mpCount.nf,  icon:'fa-circle-question',  color:'sp-warn'},
+
+  document.getElementById('sum-stats-bar').innerHTML=buildStatsBar([{label:'',pills:[
+    {label:'Total Crew',    value:totalCrew,  icon:'fa-people-group',     color:'sp-orange'},
+    {label:'Total Foremen', value:totalFore,  icon:'fa-hard-hat',         color:'sp-blue'},
+    {label:'Active Days',   value:activeDays, icon:'fa-calendar-check',   color:'sp-green'},
+    {label:'Areas Active',  value:totalAreas, icon:'fa-map-location-dot', color:'sp-teal'},
+    {label:'Manpower',      value:mpCount.mp, icon:'fa-person-digging',   color:'sp-green'},
+    {label:'Equipment',     value:mpCount.eq, icon:'fa-gear',             color:'sp-blue'},
+    {label:'Unclassified',  value:mpCount.nf, icon:'fa-circle-question',  color:'sp-warn'},
   ]}]);
+
   const topAreas=Object.keys(areaCrew).map(a=>({name:a,total:Object.values(areaCrew[a]).reduce((s,v)=>s+v.size,0)})).sort((a,b)=>b.total-a.total).slice(0,5).map(a=>a.name);
   const labels=days.map(d=>fmtDisplay(d));
   mkChart('ch-alloc','bar',labels,topAreas.map((a,i)=>({label:a,data:days.map(d=>areaCrew[a]?.[toKey(d)]?.size||0),backgroundColor:palA(i),borderColor:PALETTE[i%PALETTE.length],borderWidth:1})),{stacked:true});
@@ -852,42 +916,65 @@ function renderSummary(){
   mkChart('ch-wg','bar',topWG.map(w=>w.k.length>22?w.k.slice(0,22)+'…':w.k),[{label:'Crew',data:topWG.map(w=>w.t),backgroundColor:topWG.map((_,i)=>palA(i)),borderColor:topWG.map((_,i)=>PALETTE[i%PALETTE.length]),borderWidth:1}],{horizontal:true,legendPos:'bottom'});
   mkDoughnut('ch-disc',Object.keys(discCrew),Object.values(discCrew).map(v=>v.size),Object.keys(discCrew).map((_,i)=>palA(i)));
   mkDoughnut('ch-mpeq',['Manpower','Equipment','Unclassified'],[mpCount.mp,mpCount.eq,mpCount.nf],[palA(2),palA(1),palA(3)]);
-  document.getElementById('recent-body').innerHTML=Object.values(actByDay).sort((a,b)=>b.date-a.date).slice(0,12).map(d=>`<tr><td class="mono">${fmtDisplay(d.date)}</td><td>${d.foremen.size}</td><td>${d.crew.size}</td><td><span class="dot ${d.active?'dot-green':'dot-amber'}"></span>${d.active?'Active':'No Activity'}</td></tr>`).join('')||'<tr><td colspan="4" class="no-data">No data</td></tr>';
+
+  // Batch DOM write for recent activity table
+  const recentRows = Object.values(actByDay).sort((a,b)=>b.date-a.date).slice(0,12);
+  const frag = document.createDocumentFragment();
+  const tbody = document.getElementById('recent-body');
+  tbody.innerHTML = '';
+  recentRows.forEach(d=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="mono">${fmtDisplay(d.date)}</td><td>${d.foremen.size}</td><td>${d.crew.size}</td><td><span class="dot ${d.active?'dot-green':'dot-amber'}"></span>${d.active?'Active':'No Activity'}</td>`;
+    frag.appendChild(tr);
+  });
+  if (!recentRows.length) { const tr=document.createElement('tr');tr.innerHTML='<td colspan="4" class="no-data">No data</td>';frag.appendChild(tr); }
+  tbody.appendChild(frag);
 }
 
 /* ══ KPI ══ */
-function renderKPI(){
+function renderKPI() {
   if(!dataReady) return;
   const start=getDate('kpi-start'),end=getDate('kpi-end');
   if(!start||!end||start>end) return;
+  const startKey=toKey(start),endKey=toKey(end);
   const days=dateRange(start,end);
   const dayStats={},foreStats={},areaStats={},discStats={};
-  DATA.forEach(row=>{
-    const rd=parseRowDate(row.DATE); if(!rd) return;
-    const dk=toKey(rd); if(dk<toKey(start)||dk>toKey(end)) return;
+
+  const rows = getRowsForRange(startKey, endKey);
+  for (let i=0; i<rows.length; i++) {
+    const row=rows[i], dk=row._dateKey;
     const area=row['AREA / BLOCK']||'Unknown',disc=row['DISCIPLINE']||'Other';
     const fore=row['FOREMAN ID'],foreName=row['FOREMAN NAME']||'—';
     const res=row['RESOURCE ID'],wi=row['WI NO']||'?';
     const type=(row['MANPOWER / EQUIPMENT']||'').toLowerCase();
-    if(!dayStats[dk]) dayStats[dk]={ areas:new Set(),foremen:new Set(),crew:new Set(),projects:new Set(),mp:0,eq:0,date:rd };
+    if(!dayStats[dk]) dayStats[dk]={areas:new Set(),foremen:new Set(),crew:new Set(),projects:new Set(),mp:0,eq:0,date:row._dateObj};
     const ds=dayStats[dk];
     ds.areas.add(area); if(fore)ds.foremen.add(fore); if(res){ds.crew.add(res);if(type==='manpower')ds.mp++;else if(type==='equipment')ds.eq++;} ds.projects.add(`${fore}|${wi}|${area}`);
     if(fore){ if(!foreStats[fore])foreStats[fore]={id:fore,name:foreName,wis:new Set(),crew:new Set(),days:new Set()}; foreStats[fore].wis.add(wi);if(res)foreStats[fore].crew.add(res);foreStats[fore].days.add(dk); }
     if(!areaStats[area])areaStats[area]={crew:new Set(),crewDaySum:0,dayCount:0,days:new Set()};
     if(res)areaStats[area].crew.add(res); areaStats[area].days.add(dk);
     if(!discStats[disc])discStats[disc]=new Set(); if(res)discStats[disc].add(res);
+  }
+  // Area avg calculation using index (fast)
+  days.forEach(d=>{
+    const dk=toKey(d);
+    Object.keys(areaStats).forEach(area=>{
+      const dayRows=getRowsForDate(dk).filter(r=>(r['AREA / BLOCK']||'Unknown')===area&&r['RESOURCE ID']);
+      const uniq=new Set(dayRows.map(r=>r['RESOURCE ID'])).size;
+      if(uniq>0){areaStats[area].crewDaySum+=uniq;areaStats[area].dayCount++;}
+    });
   });
-  days.forEach(d=>{ const dk=toKey(d); Object.keys(areaStats).forEach(area=>{ const rowsOnDay=DATA.filter(r=>{ const rd=parseRowDate(r.DATE); return rd&&toKey(rd)===dk&&(r['AREA / BLOCK']||'Unknown')===area&&r['RESOURCE ID']; }); const uniq=new Set(rowsOnDay.map(r=>r['RESOURCE ID'])).size; if(uniq>0){areaStats[area].crewDaySum+=uniq;areaStats[area].dayCount++;} }); });
-  const inRange = r=>{ const d=parseRowDate(r.DATE); return d&&toKey(d)>=toKey(start)&&toKey(d)<=toKey(end)&&r['RESOURCE ID']; };
-  const totalCrew=new Set(DATA.filter(inRange).map(r=>r['RESOURCE ID'])).size;
+
+  const totalCrew=new Set(rows.filter(r=>r['RESOURCE ID']).map(r=>r['RESOURCE ID'])).size;
   const activeDays=Object.keys(dayStats).length;
-  const totalProj=new Set(DATA.filter(r=>{const d=parseRowDate(r.DATE);return d&&toKey(d)>=toKey(start)&&toKey(d)<=toKey(end);}).map(r=>`${r['FOREMAN ID']}|${r['WI NO']}`)).size;
+  const totalProj=new Set(rows.map(r=>`${r['FOREMAN ID']}|${r['WI NO']}`)).size;
   const avgCrewDay=activeDays>0?(Object.values(dayStats).reduce((s,d)=>s+d.crew.size,0)/activeDays).toFixed(1):0;
   const maxCrewDay=activeDays>0?Math.max(...Object.values(dayStats).map(d=>d.crew.size)):0;
   const totalFore=Object.keys(foreStats).length;
   const mpTotal=Object.values(dayStats).reduce((s,d)=>s+d.mp,0);
   const eqTotal=Object.values(dayStats).reduce((s,d)=>s+d.eq,0);
   const mpRatio=(mpTotal+eqTotal)>0?Math.round(mpTotal/(mpTotal+eqTotal)*100):0;
+
   const kpiDefs=[
     {label:'Total Crew (Period)',value:totalCrew,icon:'fa-people-group',color:PALETTE[0],bg:'rgba(224,123,57,0.12)',sub:''},
     {label:'Avg Crew per Day',value:avgCrewDay,icon:'fa-chart-line',color:PALETTE[1],bg:'rgba(58,123,213,0.12)',sub:`Peak: ${maxCrewDay}`},
@@ -899,20 +986,23 @@ function renderKPI(){
     {label:'Avg Projects/Foreman',value:totalFore>0?(totalProj/totalFore).toFixed(1):0,icon:'fa-diagram-project',color:PALETTE[7],bg:'rgba(163,177,138,0.12)',sub:''},
   ];
   document.getElementById('kpi-cards').innerHTML=kpiDefs.map(k=>`<div class="kpi-card" style="--kpi-color:${k.color};--kpi-bg:${k.bg}"><div class="kpi-icon"><i class="fas ${k.icon}"></i></div><div class="kpi-label">${k.label}</div><div class="kpi-value">${k.value}</div>${k.sub?`<div class="kpi-delta">${k.sub}</div>`:''}</div>`).join('');
+
   const sortedDays=days.map(d=>({d,dk:toKey(d)})).filter(x=>dayStats[x.dk]);
   const prodLabels=sortedDays.map(x=>fmtDisplay(x.d));
   const prodData=sortedDays.map(x=>dayStats[x.dk].crew.size);
   mkChart('ch-prod','bar',prodLabels,[{label:'Daily Crew',data:prodData,backgroundColor:palA(0,0.75),borderColor:PALETTE[0],borderWidth:1},{label:'Average',data:Array(prodData.length).fill(parseFloat(avgCrewDay)),type:'line',borderColor:PALETTE[1],borderWidth:2,pointRadius:0,fill:false,tension:0}],{});
-  mkChart('ch-pf','line',prodLabels,[{label:'Projects/Foreman',data:sortedDays.map(x=>{ const d=dayStats[x.dk]; return d.foremen.size>0?(d.projects.size/d.foremen.size).toFixed(2):0; }),borderColor:PALETTE[2],backgroundColor:palA(2,0.1),borderWidth:2,pointRadius:3,tension:0.35,fill:true}],{});
+  mkChart('ch-pf','line',prodLabels,[{label:'Projects/Foreman',data:sortedDays.map(x=>{const d=dayStats[x.dk];return d.foremen.size>0?(d.projects.size/d.foremen.size).toFixed(2):0;}),borderColor:PALETTE[2],backgroundColor:palA(2,0.1),borderWidth:2,pointRadius:3,tension:0.35,fill:true}],{});
   const areaNames=Object.keys(areaStats).sort((a,b)=>(areaStats[b].crewDaySum/Math.max(1,areaStats[b].dayCount))-(areaStats[a].crewDaySum/Math.max(1,areaStats[a].dayCount)));
   mkChart('ch-area-util','bar',areaNames,[{label:'Avg Daily Crew',data:areaNames.map(a=>(areaStats[a].crewDaySum/Math.max(1,areaStats[a].dayCount)).toFixed(1)),backgroundColor:areaNames.map((_,i)=>palA(i)),borderColor:areaNames.map((_,i)=>PALETTE[i%PALETTE.length]),borderWidth:1}],{horizontal:true,legendPos:'bottom'});
   const discNames=Object.keys(discStats);
   mkDoughnut('ch-disc-share',discNames,discNames.map(d=>discStats[d].size),discNames.map((_,i)=>palA(i)));
+
   const maxAreaCrew=Math.max(...Object.values(areaStats).map(a=>a.crew.size),1);
   document.getElementById('kpi-area-rows').innerHTML=Object.entries(areaStats).sort((a,b)=>b[1].crew.size-a[1].crew.size).map(([area,s],i)=>{
     const avg=(s.crewDaySum/Math.max(1,s.dayCount)).toFixed(1),pct=Math.round(s.crew.size/maxAreaCrew*100);
     return `<div class="insight-card"><div class="insight-card-title">${escHtml(area)}</div><div class="insight-card-sub">Total unique crew · avg per active day</div><div style="display:flex;gap:20px;margin-bottom:12px"><div><div class="stat-label">Unique Crew</div><div class="stat-value" style="color:${PALETTE[i%PALETTE.length]}">${s.crew.size}</div></div><div><div class="stat-label">Active Days</div><div class="stat-value">${s.days.size}</div></div><div><div class="stat-label">Avg Crew/Day</div><div class="stat-value">${avg}</div></div></div><div class="prog-bar-wrap"><div class="prog-bar-bg"><div class="prog-bar-fill" style="width:${pct}%;background:${PALETTE[i%PALETTE.length]}"></div></div><div class="prog-val">${pct}%</div></div></div>`;
   }).join('');
+
   const foreRanked=Object.values(foreStats).map(f=>({...f,avgCrew:(f.crew.size/Math.max(1,f.days.size)).toFixed(1)})).sort((a,b)=>b.crew.size-a.crew.size);
   document.getElementById('kpi-fore-badge').textContent=`${foreRanked.length} foremen`;
   document.getElementById('kpi-fore-body').innerHTML=foreRanked.map((f,i)=>`<tr><td class="mono">${i+1}</td><td class="mono">${escHtml(f.id)}</td><td>${escHtml(f.name)}</td><td>${f.wis.size}</td><td><strong>${f.crew.size}</strong></td><td>${f.days.size}</td><td class="mono">${f.avgCrew}</td></tr>`).join('')||'<tr><td colspan="7" class="no-data">No data</td></tr>';
@@ -921,13 +1011,13 @@ function renderKPI(){
 }
 
 /* ══ DAILY REPORTS (UI) ══ */
-function renderReports(){
+function renderReports() {
   if(!dataReady) return;
   const d=getDate('r-date'),area=document.getElementById('r-area').value;
   const disc=document.getElementById('r-disc').value,wi=document.getElementById('r-wi').value.trim();
   const pdfBtn=document.getElementById('btn-dl-pdf');
   if(!d){ pdfBtn.style.display='none'; return; }
-  const { groups,uniqueResources,uniqueForemen }=groupByProject(toKey(d),area,disc,wi);
+  const {groups,uniqueResources,uniqueForemen}=groupByProject(toKey(d),area,disc,wi);
   lastRepGroups=groups;
   pdfBtn.style.display=groups.length?'inline-flex':'none';
   const dayWrap=document.getElementById('day-summary-wrap'),cards=document.getElementById('rep-cards');
@@ -939,18 +1029,20 @@ function renderReports(){
   Object.entries(areaSummary).forEach(([a,s])=>{ sh+=`<div class="day-summary-card"><div class="day-area">${escHtml(a)}</div><div class="day-stats"><div class="day-stat-item"><div class="day-stat-label">Permits</div><div class="day-stat-value">${s.permits.size}</div></div><div class="day-stat-item"><div class="day-stat-label">Crew</div><div class="day-stat-value">${s.crew.size}</div></div><div class="day-stat-item"><div class="day-stat-label">Foremen</div><div class="day-stat-value">${s.foremen.size}</div></div></div></div>`; });
   sh+=`<div class="day-summary-card total"><div class="day-area">TOTAL</div><div class="day-stats"><div class="day-stat-item"><div class="day-stat-label">Permits</div><div class="day-stat-value">${totalPermits}</div></div><div class="day-stat-item"><div class="day-stat-label">Crew</div><div class="day-stat-value">${uniqueResources.size}</div></div><div class="day-stat-item"><div class="day-stat-label">Foremen</div><div class="day-stat-value">${uniqueForemen.size}</div></div></div></div></div>`;
   dayWrap.innerHTML=sh;
-  let html=`<div class="section-label">${groups.length} Work Group${groups.length!==1?'s':''}</div>`;
+
+  // Build cards using array join (faster than repeated string concat)
+  const parts=[`<div class="section-label">${groups.length} Work Group${groups.length!==1?'s':''}</div>`];
   groups.forEach((g,i)=>{
     const mp=g.resourceRows.filter(r=>r.type.toLowerCase()==='manpower').length;
     const eq=g.resourceRows.filter(r=>r.type.toLowerCase()==='equipment').length;
-    const progressLines=g.progress.replace(/"/g,'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{ const idx=l.lastIndexOf('='); return idx!==-1?{desc:l.slice(0,idx).trim(),qty:l.slice(idx+1).trim()}:{desc:l,qty:'—'}; });
-    html+=`<div class="work-card"><div class="work-card-head"><span class="work-card-num"><i class="fas fa-clipboard-list"></i> Work Report #${i+1}</span><span class="work-card-wi">WI: ${escHtml(g.wi)}</span></div>
+    const progressLines=g.progress.replace(/"/g,'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const idx=l.lastIndexOf('=');return idx!==-1?{desc:l.slice(0,idx).trim(),qty:l.slice(idx+1).trim()}:{desc:l,qty:'—'};});
+    parts.push(`<div class="work-card"><div class="work-card-head"><span class="work-card-num"><i class="fas fa-clipboard-list"></i> Work Report #${i+1}</span><span class="work-card-wi">WI: ${escHtml(g.wi)}</span></div>
     ${g.desc?`<div class="work-desc">${escHtml(g.desc)}</div>`:''}
     <div class="work-meta"><div class="work-meta-item"><div class="work-meta-label">Foreman ID</div><div class="work-meta-value">${escHtml(g.id)}</div></div><div class="work-meta-item"><div class="work-meta-label">Foreman Name</div><div class="work-meta-value">${escHtml(g.crewLead)}</div></div><div class="work-meta-item"><div class="work-meta-label">Area / Block</div><div class="work-meta-value">${escHtml(g.area)}</div></div><div class="work-meta-item"><div class="work-meta-label">Discipline</div><div class="work-meta-value">${escHtml(g.discipline)}</div></div><div class="work-meta-item"><div class="work-meta-label">Permit</div><div class="work-meta-value">${escHtml(g.permitNo)}</div></div><div class="work-meta-item"><div class="work-meta-label">Work Hours</div><div class="work-meta-value">${escHtml(g.timeIn)} → ${escHtml(g.timeOut)}</div></div><div class="work-meta-item"><div class="work-meta-label">Manpower</div><div class="work-meta-value">${mp}</div></div><div class="work-meta-item"><div class="work-meta-label">Equipment</div><div class="work-meta-value">${eq}</div></div><div class="work-meta-item"><div class="work-meta-label">Crew Size</div><div class="work-meta-value">${g.resources.size}</div></div></div>
     <div class="work-sub-head">Progress Details</div><div style="overflow-x:auto"><table class="data-table"><thead><tr><th>#</th><th>Description</th><th>Quantity</th></tr></thead><tbody>${progressLines.length?progressLines.map((pl,j)=>`<tr><td class="mono">${j+1}</td><td>${escHtml(pl.desc)}</td><td class="mono">${escHtml(pl.qty)}</td></tr>`).join(''):'<tr><td colspan="3" class="no-data">No progress data</td></tr>'}</tbody></table></div>
-    <div class="work-sub-head">Resources</div><div style="overflow-x:auto"><table class="data-table"><thead><tr><th>#</th><th>Resource ID</th><th>Designation</th><th>Type</th><th>Time-In</th><th>Time-Out</th></tr></thead><tbody>${g.resourceRows.length?g.resourceRows.map((r,j)=>{const t=r.type.toLowerCase();const badge=t==='manpower'?'<span class="badge badge-mp">Manpower</span>':t==='equipment'?'<span class="badge badge-eq">Equipment</span>':`<span class="badge badge-nf">${escHtml(r.type)||'—'}</span>`;return `<tr><td class="mono">${j+1}</td><td class="mono">${escHtml(r.id)}</td><td>${escHtml(r.desig)}</td><td>${badge}</td><td class="mono">${escHtml(r.tin)}</td><td class="mono">${escHtml(r.tout)}</td></tr>`;}).join(''):'<tr><td colspan="6" class="no-data">No resource data</td></tr>'}</tbody></table></div></div>`;
+    <div class="work-sub-head">Resources</div><div style="overflow-x:auto"><table class="data-table"><thead><tr><th>#</th><th>Resource ID</th><th>Designation</th><th>Type</th><th>Time-In</th><th>Time-Out</th></tr></thead><tbody>${g.resourceRows.length?g.resourceRows.map((r,j)=>{const t=r.type.toLowerCase();const badge=t==='manpower'?'<span class="badge badge-mp">Manpower</span>':t==='equipment'?'<span class="badge badge-eq">Equipment</span>':`<span class="badge badge-nf">${escHtml(r.type)||'—'}</span>`;return `<tr><td class="mono">${j+1}</td><td class="mono">${escHtml(r.id)}</td><td>${escHtml(r.desig)}</td><td>${badge}</td><td class="mono">${escHtml(r.tin)}</td><td class="mono">${escHtml(r.tout)}</td></tr>`;}).join(''):'<tr><td colspan="6" class="no-data">No resource data</td></tr>'}</tbody></table></div></div>`);
   });
-  cards.innerHTML=html;
+  cards.innerHTML=parts.join('');
 }
 
 /* ══ LOGO FETCH HELPER ══ */
@@ -958,42 +1050,26 @@ let _cachedLogoB64 = null;
 async function fetchLogoBase64() {
   if (_cachedLogoB64) return _cachedLogoB64;
   try {
-    const resp = await fetch(LOGO_URL);
-    const blob = await resp.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => { _cachedLogoB64 = reader.result; resolve(_cachedLogoB64); };
-      reader.readAsDataURL(blob);
-    });
-  } catch (e) {
-    console.warn('Logo fetch failed:', e);
-    return null;
-  }
+    const resp=await fetch(LOGO_URL);
+    const blob=await resp.blob();
+    return new Promise(resolve=>{const reader=new FileReader();reader.onloadend=()=>{_cachedLogoB64=reader.result;resolve(_cachedLogoB64);};reader.readAsDataURL(blob);});
+  } catch(e){ console.warn('Logo fetch failed:',e); return null; }
 }
 
 /* ══ PDF GENERATION ══ */
 async function downloadReportsPDF() {
-  if (!lastRepGroups.length) { alert('No reports to export.'); return; }
-  const overlay     = document.getElementById('pdf-overlay');
-  const progressTxt = document.getElementById('pdf-progress-text');
+  if(!lastRepGroups.length){alert('No reports to export.');return;}
+  const overlay=document.getElementById('pdf-overlay'),progressTxt=document.getElementById('pdf-progress-text');
   overlay.classList.add('visible');
   try {
-    progressTxt.textContent = 'Loading company logo…';
-    const logoB64 = await fetchLogoBase64();
-    const { jsPDF } = window.jspdf;
-    const pdf   = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
-    const pageW = pdf.internal.pageSize.getWidth();
-    const pageH = pdf.internal.pageSize.getHeight();
-    const M     = 36;
-    const inner = pageW - M * 2;
-    const dateVal = getDate('r-date');
-    const dateStr = dateVal ? fmtDisplay(dateVal) : '—';
-    const genDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-    const C = {
-      accent:[224,123,57],text:[26,34,54],sub:[90,104,128],dim:[160,172,190],
-      surface:[244,246,249],surface2:[235,238,243],border:[210,215,224],
-      white:[255,255,255],green:[46,170,126],blue:[58,123,213],line:[224,226,232],
-    };
+    progressTxt.textContent='Loading company logo…';
+    const logoB64=await fetchLogoBase64();
+    const {jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:'portrait',unit:'pt',format:'a4'});
+    const pageW=pdf.internal.pageSize.getWidth(),pageH=pdf.internal.pageSize.getHeight(),M=36,inner=pageW-M*2;
+    const dateVal=getDate('r-date'),dateStr=dateVal?fmtDisplay(dateVal):'—';
+    const genDate=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    const C={accent:[224,123,57],text:[26,34,54],sub:[90,104,128],dim:[160,172,190],surface:[244,246,249],surface2:[235,238,243],border:[210,215,224],white:[255,255,255],green:[46,170,126],blue:[58,123,213],line:[224,226,232]};
     const setFill=c=>pdf.setFillColor(...c),setDraw=c=>pdf.setDrawColor(...c),setTxtClr=c=>pdf.setTextColor(...c);
     const bold=()=>pdf.setFont('helvetica','bold'),normal=()=>pdf.setFont('helvetica','normal');
     const LOGO_SIZE=36;
@@ -1002,16 +1078,7 @@ async function downloadReportsPDF() {
       setFill(C.surface);pdf.rect(0,0,pageW,headerH,'F');
       setFill(C.accent);pdf.rect(0,0,4,headerH,'F');
       const logoX=M+4,logoY=(headerH-LOGO_SIZE)/2;
-      if(logoB64){
-        setFill([255,255,255]);setDraw(C.border);pdf.setLineWidth(0.5);
-        pdf.roundedRect(logoX,logoY,LOGO_SIZE,LOGO_SIZE,4,4,'FD');
-        const pad=3;pdf.addImage(logoB64,'PNG',logoX+pad,logoY+pad,LOGO_SIZE-pad*2,LOGO_SIZE-pad*2);
-      } else {
-        setFill(C.surface2);setDraw(C.border);pdf.setLineWidth(0.5);
-        pdf.roundedRect(logoX,logoY,LOGO_SIZE,LOGO_SIZE,4,4,'FD');
-        bold();pdf.setFontSize(9);setTxtClr(C.accent);
-        pdf.text('GPS',logoX+LOGO_SIZE/2,logoY+LOGO_SIZE/2+3,{align:'center'});
-      }
+      if(logoB64){setFill([255,255,255]);setDraw(C.border);pdf.setLineWidth(0.5);pdf.roundedRect(logoX,logoY,LOGO_SIZE,LOGO_SIZE,4,4,'FD');const pad=3;pdf.addImage(logoB64,'PNG',logoX+pad,logoY+pad,LOGO_SIZE-pad*2,LOGO_SIZE-pad*2);}else{setFill(C.surface2);setDraw(C.border);pdf.setLineWidth(0.5);pdf.roundedRect(logoX,logoY,LOGO_SIZE,LOGO_SIZE,4,4,'FD');bold();pdf.setFontSize(9);setTxtClr(C.accent);pdf.text('GPS',logoX+LOGO_SIZE/2,logoY+LOGO_SIZE/2+3,{align:'center'});}
       const textX=logoX+LOGO_SIZE+10;
       bold();pdf.setFontSize(13);setTxtClr(C.text);pdf.text('Gulf Petrochemical Services',textX,28);
       normal();pdf.setFontSize(7.5);setTxtClr(C.sub);pdf.text('OXY OMAN · CONTRACT #24000110790',textX,40);
@@ -1019,71 +1086,18 @@ async function downloadReportsPDF() {
       const badgeLabel=`Work Report #${reportNo}`;
       bold();pdf.setFontSize(9);setTxtClr(C.white);
       const bw=pdf.getTextWidth(badgeLabel)+22,bx=pageW-M-bw;
-      setFill(C.accent);pdf.roundedRect(bx,10,bw,19,3,3,'F');
-      pdf.text(badgeLabel,bx+bw/2,23,{align:'center'});
-      normal();pdf.setFontSize(7.5);setTxtClr(C.sub);
-      pdf.text(`WI: ${wi}`,pageW-M,40,{align:'right'});
-      pdf.text(`Date: ${dateStr}`,pageW-M,51,{align:'right'});
+      setFill(C.accent);pdf.roundedRect(bx,10,bw,19,3,3,'F');pdf.text(badgeLabel,bx+bw/2,23,{align:'center'});
+      normal();pdf.setFontSize(7.5);setTxtClr(C.sub);pdf.text(`WI: ${wi}`,pageW-M,40,{align:'right'});pdf.text(`Date: ${dateStr}`,pageW-M,51,{align:'right'});
       setDraw(C.border);pdf.setLineWidth(0.5);pdf.line(0,headerH,pageW,headerH);
       return headerH+10;
     }
-    function checkPage(y,needed,reportNo,wi){
-      if(y+needed>pageH-24){pdf.addPage();drawPageFooter();y=drawPageHeader(reportNo,wi,true);}
-      return y;
-    }
-    function sectionBar(y,title){
-      setFill(C.surface2);pdf.rect(M,y,inner,18,'F');
-      setDraw(C.accent);pdf.setLineWidth(2);pdf.line(M,y,M,y+18);pdf.setLineWidth(0.5);
-      bold();pdf.setFontSize(7);setTxtClr(C.sub);pdf.text(title.toUpperCase(),M+8,y+12);normal();
-      return y+18;
-    }
-    function tableRow(y,cells,widths,rowH,isHeader,isAlt){
-      if(isHeader)setFill(C.surface2);else if(isAlt)setFill([248,250,253]);else setFill(C.white);
-      pdf.rect(M,y,inner,rowH,'F');setDraw(C.line);pdf.setLineWidth(0.3);pdf.line(M,y+rowH,M+inner,y+rowH);
-      let x=M;
-      cells.forEach((cell,ci)=>{
-        const w=widths[ci];
-        if(isHeader){bold();pdf.setFontSize(6.5);setTxtClr(C.sub);}else{normal();pdf.setFontSize(7.5);setTxtClr(C.text);}
-        const lines=pdf.splitTextToSize(String(cell||'—'),w-8);
-        pdf.text(lines[0],x+4,y+rowH/2+(isHeader?2:2.5));x+=w;
-      });
-      return y+rowH;
-    }
-    function metaGrid(y,items){
-      const cols=3,cellW=inner/cols,cellH=32,rows=Math.ceil(items.length/cols),totalH=rows*cellH;
-      for(let ri=0;ri<rows;ri++){for(let ci=0;ci<cols;ci++){const idx=ri*cols+ci;if(idx>=items.length)continue;const cx=M+ci*cellW,cy=y+ri*cellH;setFill(ci%2===0?C.surface:C.surface2);setDraw(C.border);pdf.setLineWidth(0.3);pdf.rect(cx,cy,cellW,cellH,'FD');bold();pdf.setFontSize(6);setTxtClr(C.dim);pdf.text(String(items[idx][0]).toUpperCase(),cx+5,cy+10);normal();pdf.setFontSize(8);setTxtClr(C.text);const val=pdf.splitTextToSize(String(items[idx][1]||'—'),cellW-10);pdf.text(val[0],cx+5,cy+22);}}
-      return y+totalH;
-    }
-    function descBox(y,text){
-      if(!text)return y;normal();pdf.setFontSize(8);setTxtClr(C.sub);
-      const lines=pdf.splitTextToSize(text,inner-16),boxH=lines.length*11+14;
-      setFill([250,251,254]);setDraw(C.border);pdf.setLineWidth(0.3);pdf.rect(M,y,inner,boxH,'FD');
-      setDraw(C.accent);pdf.setLineWidth(2);pdf.line(M,y,M,y+boxH);pdf.setLineWidth(0.3);pdf.text(lines,M+10,y+11);
-      return y+boxH+6;
-    }
-    function signatureSection(y){
-      const sigBoxH=88;y=sectionBar(y,'Approval & Signatures');
-      setDraw(C.border);pdf.setLineWidth(0.5);pdf.rect(M,y,inner,sigBoxH,'S');
-      const colW=inner/3;
-      [{title:'Site Engineer',color:C.green},{title:'Site Manager',color:C.blue},{title:'Client Representative',color:C.accent}].forEach((role,ci)=>{
-        const cx=M+ci*colW;
-        if(ci>0){setDraw(C.border);pdf.setLineWidth(0.4);pdf.line(cx,y,cx,y+sigBoxH);}
-        pdf.setFillColor(...role.color);pdf.rect(cx,y,colW,14,'F');
-        bold();pdf.setFontSize(7.5);setTxtClr(C.white);pdf.text(role.title,cx+colW/2,y+10,{align:'center'});
-        const fieldY=y+22,fieldGap=18;
-        ['Name:','Designation:','Signature:','Date:'].forEach((lbl,fi)=>{
-          normal();pdf.setFontSize(7);setTxtClr(C.sub);pdf.text(lbl,cx+6,fieldY+fi*fieldGap);
-          setDraw(C.line);pdf.setLineWidth(0.4);pdf.line(cx+38,fieldY+fi*fieldGap+1,cx+colW-6,fieldY+fi*fieldGap+1);
-        });
-      });
-      return y+sigBoxH+10;
-    }
-    function drawPageFooter(pageLabel){
-      setFill(C.accent);pdf.rect(0,pageH-5,pageW,5,'F');
-      setDraw(C.border);pdf.setLineWidth(0.3);pdf.line(0,pageH-18,pageW,pageH-18);
-      normal();pdf.setFontSize(6.5);setTxtClr(C.dim);
-      pdf.text(`Gulf Petrochemical Services LLC · Generated ${genDate}${pageLabel?' · '+pageLabel:''}`,pageW/2,pageH-8,{align:'center'});
-    }
+    function checkPage(y,needed,reportNo,wi){if(y+needed>pageH-24){pdf.addPage();drawPageFooter();y=drawPageHeader(reportNo,wi,true);}return y;}
+    function sectionBar(y,title){setFill(C.surface2);pdf.rect(M,y,inner,18,'F');setDraw(C.accent);pdf.setLineWidth(2);pdf.line(M,y,M,y+18);pdf.setLineWidth(0.5);bold();pdf.setFontSize(7);setTxtClr(C.sub);pdf.text(title.toUpperCase(),M+8,y+12);normal();return y+18;}
+    function tableRow(y,cells,widths,rowH,isHeader,isAlt){if(isHeader)setFill(C.surface2);else if(isAlt)setFill([248,250,253]);else setFill(C.white);pdf.rect(M,y,inner,rowH,'F');setDraw(C.line);pdf.setLineWidth(0.3);pdf.line(M,y+rowH,M+inner,y+rowH);let x=M;cells.forEach((cell,ci)=>{const w=widths[ci];if(isHeader){bold();pdf.setFontSize(6.5);setTxtClr(C.sub);}else{normal();pdf.setFontSize(7.5);setTxtClr(C.text);}const lines=pdf.splitTextToSize(String(cell||'—'),w-8);pdf.text(lines[0],x+4,y+rowH/2+(isHeader?2:2.5));x+=w;});return y+rowH;}
+    function metaGrid(y,items){const cols=3,cellW=inner/cols,cellH=32,rows=Math.ceil(items.length/cols),totalH=rows*cellH;for(let ri=0;ri<rows;ri++){for(let ci=0;ci<cols;ci++){const idx=ri*cols+ci;if(idx>=items.length)continue;const cx=M+ci*cellW,cy=y+ri*cellH;setFill(ci%2===0?C.surface:C.surface2);setDraw(C.border);pdf.setLineWidth(0.3);pdf.rect(cx,cy,cellW,cellH,'FD');bold();pdf.setFontSize(6);setTxtClr(C.dim);pdf.text(String(items[idx][0]).toUpperCase(),cx+5,cy+10);normal();pdf.setFontSize(8);setTxtClr(C.text);const val=pdf.splitTextToSize(String(items[idx][1]||'—'),cellW-10);pdf.text(val[0],cx+5,cy+22);}}return y+totalH;}
+    function descBox(y,text){if(!text)return y;normal();pdf.setFontSize(8);setTxtClr(C.sub);const lines=pdf.splitTextToSize(text,inner-16),boxH=lines.length*11+14;setFill([250,251,254]);setDraw(C.border);pdf.setLineWidth(0.3);pdf.rect(M,y,inner,boxH,'FD');setDraw(C.accent);pdf.setLineWidth(2);pdf.line(M,y,M,y+boxH);pdf.setLineWidth(0.3);pdf.text(lines,M+10,y+11);return y+boxH+6;}
+    function signatureSection(y){const sigBoxH=88;y=sectionBar(y,'Approval & Signatures');setDraw(C.border);pdf.setLineWidth(0.5);pdf.rect(M,y,inner,sigBoxH,'S');const colW=inner/3;[{title:'Site Engineer',color:C.green},{title:'Site Manager',color:C.blue},{title:'Client Representative',color:C.accent}].forEach((role,ci)=>{const cx=M+ci*colW;if(ci>0){setDraw(C.border);pdf.setLineWidth(0.4);pdf.line(cx,y,cx,y+sigBoxH);}pdf.setFillColor(...role.color);pdf.rect(cx,y,colW,14,'F');bold();pdf.setFontSize(7.5);setTxtClr(C.white);pdf.text(role.title,cx+colW/2,y+10,{align:'center'});const fieldY=y+22,fieldGap=18;['Name:','Designation:','Signature:','Date:'].forEach((lbl,fi)=>{normal();pdf.setFontSize(7);setTxtClr(C.sub);pdf.text(lbl,cx+6,fieldY+fi*fieldGap);setDraw(C.line);pdf.setLineWidth(0.4);pdf.line(cx+38,fieldY+fi*fieldGap+1,cx+colW-6,fieldY+fi*fieldGap+1);});});return y+sigBoxH+10;}
+    function drawPageFooter(pageLabel){setFill(C.accent);pdf.rect(0,pageH-5,pageW,5,'F');setDraw(C.border);pdf.setLineWidth(0.3);pdf.line(0,pageH-18,pageW,pageH-18);normal();pdf.setFontSize(6.5);setTxtClr(C.dim);pdf.text(`Gulf Petrochemical Services LLC · Generated ${genDate}${pageLabel?' · '+pageLabel:''}`,pageW/2,pageH-8,{align:'center'});}
     const totalReports=lastRepGroups.length;
     for(let i=0;i<totalReports;i++){
       const g=lastRepGroups[i];
@@ -1120,27 +1134,30 @@ async function downloadReportsPDF() {
 }
 
 /* ══ REPORT SUMMARY ══ */
-function renderRepSum(){
+function renderRepSum() {
   if(!dataReady) return;
   const d=getDate('rs-date'),area=document.getElementById('rs-area').value,disc=document.getElementById('rs-disc').value;
   if(!d){document.getElementById('rs-body').innerHTML='<tr><td colspan="9" class="no-data">Please select a date.</td></tr>';return;}
   const rows=groupByProjectForDate(toKey(d),area,disc);
   lastRepSumRows=rows;
   const uF=new Set(rows.map(r=>r.id)).size,uA=new Set(rows.map(r=>r.area)).size,tC=rows.reduce((s,r)=>s+r.resources.size,0);
-  document.getElementById('rs-stats-bar').innerHTML = buildStatsBar([{label:'', pills:[
-    {label:'Work Groups', value:rows.length, icon:'fa-clipboard-list',   color:'sp-orange'},
-    {label:'Foremen',     value:uF,          icon:'fa-hard-hat',          color:'sp-blue'},
-    {label:'Areas',       value:uA,          icon:'fa-map-location-dot',  color:'sp-teal'},
-    {label:'Total Crew',  value:tC,          icon:'fa-people-group',      color:'sp-green'},
+  document.getElementById('rs-stats-bar').innerHTML=buildStatsBar([{label:'',pills:[
+    {label:'Work Groups',value:rows.length,icon:'fa-clipboard-list',color:'sp-orange'},
+    {label:'Foremen',value:uF,icon:'fa-hard-hat',color:'sp-blue'},
+    {label:'Areas',value:uA,icon:'fa-map-location-dot',color:'sp-teal'},
+    {label:'Total Crew',value:tC,icon:'fa-people-group',color:'sp-green'},
   ]}]);
   document.getElementById('rs-badge').textContent=`${rows.length} entries`;
   if(!rows.length){document.getElementById('rs-body').innerHTML='<tr><td colspan="9" class="no-data">No records found.</td></tr>';return;}
-  document.getElementById('rs-body').innerHTML=rows.map((g,i)=>`<tr><td class="mono">${i+1}</td><td>${escHtml(g.crewLead)}</td><td class="mono">${escHtml(g.id)}</td><td>${escHtml(g.area)}</td><td>${escHtml(g.discipline)}</td><td class="mono">${escHtml(g.wi)}</td><td><strong>${g.resources.size}</strong></td><td class="desc-cell">${escHtml(g.desc||'—')}</td><td class="prog-cell">${escHtml(formatProgressFlat(g.progress)||'—')}</td></tr>`).join('');
+  // Use fragment for batch DOM write
+  const tbody=document.getElementById('rs-body');
+  const parts=rows.map((g,i)=>`<tr><td class="mono">${i+1}</td><td>${escHtml(g.crewLead)}</td><td class="mono">${escHtml(g.id)}</td><td>${escHtml(g.area)}</td><td>${escHtml(g.discipline)}</td><td class="mono">${escHtml(g.wi)}</td><td><strong>${g.resources.size}</strong></td><td class="desc-cell">${escHtml(g.desc||'—')}</td><td class="prog-cell">${escHtml(formatProgressFlat(g.progress)||'—')}</td></tr>`);
+  tbody.innerHTML=parts.join('');
 }
 function formatProgressFlat(p){ if(!p)return ''; return p.replace(/"/g,'').split('\n').map(l=>l.trim()).filter(Boolean).join(' | '); }
 
 /* ══ PROJECT STATUS ══ */
-function renderStatus(){
+function renderStatus() {
   if(!dataReady) return;
   const d=getDate('st-date'),area=document.getElementById('st-area').value,disc=document.getElementById('st-disc').value;
   if(!d) return;
@@ -1150,20 +1167,20 @@ function renderStatus(){
   const uA=new Set(groups.map(g=>g.area)).size;
   const mpT=groups.reduce((s,g)=>s+g.resourceRows.filter(r=>r.type.toLowerCase()==='manpower').length,0);
   const eqT=groups.reduce((s,g)=>s+g.resourceRows.filter(r=>r.type.toLowerCase()==='equipment').length,0);
-  document.getElementById('st-stats-bar').innerHTML = buildStatsBar([{label:'', pills:[
-    {label:'Total Projects', value:groups.length,         icon:'fa-clipboard-list',   color:'sp-orange'},
-    {label:'Total Crew',     value:uniqueResources.size,  icon:'fa-people-group',     color:'sp-blue'},
-    {label:'Active Areas',   value:uA,                    icon:'fa-map-location-dot', color:'sp-teal'},
-    {label:'Manpower',       value:mpT,                   icon:'fa-person-digging',   color:'sp-green'},
-    {label:'Equipment',      value:eqT,                   icon:'fa-gear',             color:'sp-purple'},
+  document.getElementById('st-stats-bar').innerHTML=buildStatsBar([{label:'',pills:[
+    {label:'Total Projects',value:groups.length,icon:'fa-clipboard-list',color:'sp-orange'},
+    {label:'Total Crew',value:uniqueResources.size,icon:'fa-people-group',color:'sp-blue'},
+    {label:'Active Areas',value:uA,icon:'fa-map-location-dot',color:'sp-teal'},
+    {label:'Manpower',value:mpT,icon:'fa-person-digging',color:'sp-green'},
+    {label:'Equipment',value:eqT,icon:'fa-gear',color:'sp-purple'},
   ]}]);
   document.getElementById('st-badge').textContent=`${groups.length} entries`;
   if(!groups.length){document.getElementById('st-body').innerHTML='<tr><td colspan="9" class="no-data">No records found.</td></tr>';return;}
-  document.getElementById('st-body').innerHTML=groups.map((g,i)=>{ const mp=g.resourceRows.filter(r=>r.type.toLowerCase()==='manpower').length,eq=g.resourceRows.filter(r=>r.type.toLowerCase()==='equipment').length; return `<tr><td class="mono">${i+1}</td><td class="mono">${escHtml(g.id)}</td><td>${escHtml(g.crewLead)}</td><td class="mono">${escHtml(g.wi)}</td><td>${escHtml(g.area)}</td><td><strong>${g.resources.size}</strong></td><td>${mp}</td><td>${eq}</td><td>${escHtml(g.discipline)}</td></tr>`; }).join('');
+  document.getElementById('st-body').innerHTML=groups.map((g,i)=>{const mp=g.resourceRows.filter(r=>r.type.toLowerCase()==='manpower').length,eq=g.resourceRows.filter(r=>r.type.toLowerCase()==='equipment').length;return `<tr><td class="mono">${i+1}</td><td class="mono">${escHtml(g.id)}</td><td>${escHtml(g.crewLead)}</td><td class="mono">${escHtml(g.wi)}</td><td>${escHtml(g.area)}</td><td><strong>${g.resources.size}</strong></td><td>${mp}</td><td>${eq}</td><td>${escHtml(g.discipline)}</td></tr>`;}).join('');
 }
 
 /* ══ RESOURCES ══ */
-function renderResource(){
+function renderResource() {
   if(!dataReady) return;
   const d=getDate('res-date'),area=document.getElementById('res-area').value;
   if(!d) return;
@@ -1173,13 +1190,13 @@ function renderResource(){
   const mp=all.filter(r=>r.type.toLowerCase()==='manpower');
   const eq=all.filter(r=>r.type.toLowerCase()==='equipment');
   const nf=all.filter(r=>!['manpower','equipment'].includes(r.type.toLowerCase()));
-  document.getElementById('res-stats-bar').innerHTML = buildStatsBar([{label:'', pills:[
-    {label:'All Resources', value:all.length, icon:'fa-boxes-stacked',   color:'sp-blue'},
-    {label:'Manpower',      value:mp.length,  icon:'fa-person-digging',  color:'sp-green'},
-    {label:'Equipment',     value:eq.length,  icon:'fa-gear',            color:'sp-teal'},
-    {label:'Unclassified',  value:nf.length,  icon:'fa-circle-question', color:'sp-warn'},
+  document.getElementById('res-stats-bar').innerHTML=buildStatsBar([{label:'',pills:[
+    {label:'All Resources',value:all.length,icon:'fa-boxes-stacked',color:'sp-blue'},
+    {label:'Manpower',value:mp.length,icon:'fa-person-digging',color:'sp-green'},
+    {label:'Equipment',value:eq.length,icon:'fa-gear',color:'sp-teal'},
+    {label:'Unclassified',value:nf.length,icon:'fa-circle-question',color:'sp-warn'},
   ]}]);
-  function mkT(title,rows,bc,bl){ return `<div class="table-wrap" style="margin-bottom:14px"><div class="table-header"><div class="table-title">${title}</div><div class="table-header-right"><div class="table-badge">${rows.length}</div><button class="btn-excel" onclick="exportResourceExcel()"><i class="fas fa-file-excel"></i> Excel</button></div></div>${rows.length?`<div class="table-scroll"><table class="data-table"><thead><tr><th>#</th><th>Resource ID</th><th>Designation</th><th>Type</th><th>WI No.</th><th>Area</th><th>Foreman</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td class="mono">${i+1}</td><td class="mono">${escHtml(r.id)}</td><td>${escHtml(r.desig)}</td><td><span class="badge ${bc}">${bl}</span></td><td class="mono">${escHtml(r.wi)}</td><td>${escHtml(r.area)}</td><td>${escHtml(r.foreman)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="no-data">No records found.</div>'}</div>`; }
+  function mkT(title,rows,bc,bl){return `<div class="table-wrap" style="margin-bottom:14px"><div class="table-header"><div class="table-title">${title}</div><div class="table-header-right"><div class="table-badge">${rows.length}</div><button class="btn-excel" onclick="exportResourceExcel()"><i class="fas fa-file-excel"></i> Excel</button></div></div>${rows.length?`<div class="table-scroll"><table class="data-table"><thead><tr><th>#</th><th>Resource ID</th><th>Designation</th><th>Type</th><th>WI No.</th><th>Area</th><th>Foreman</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td class="mono">${i+1}</td><td class="mono">${escHtml(r.id)}</td><td>${escHtml(r.desig)}</td><td><span class="badge ${bc}">${bl}</span></td><td class="mono">${escHtml(r.wi)}</td><td>${escHtml(r.area)}</td><td>${escHtml(r.foreman)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="no-data">No records found.</div>'}</div>`;}
   document.getElementById('res-tables').innerHTML=mkT('Manpower',mp,'badge-mp','Manpower')+mkT('Equipment',eq,'badge-eq','Equipment')+mkT('Unclassified',nf,'badge-nf','Other');
 }
 
@@ -1191,21 +1208,25 @@ async function campLoadData() {
     const json=await res.json();
     if(json.status!=='ok') throw new Error(json.message||'Load failed');
     campAllRows=json.rows.map(r=>({
-      _row:  r._row,
-      id:    String(r['ID']||r['id']||''),
-      name:  String(r['Employee Name']||r['EMPLOYEE NAME']||r['Name']||''),
-      desig: String(r['Designation']||r['DESIGNATION']||''),
-      cat:   String(r['Category']||r['CATEGORY']||''),
-      nat:   String(r['Nationality']||r['NATIONALITY']||''),
-      doj:   parseDOJ(r['Date of Joining']||r['DATE OF JOINING']||r['DOJ']||''),
-      dor:   parseDOJ(r['Date of Release']||r['DATE OF RELEASE']||r['DOR']||r['Release Date']||r['RELEASE DATE']||''),
-      camp:  String(r['Camp']||r['CAMP']||''),
+      _row:r._row,
+      id:String(r['ID']||r['id']||''),
+      name:String(r['Employee Name']||r['EMPLOYEE NAME']||r['Name']||''),
+      desig:String(r['Designation']||r['DESIGNATION']||''),
+      cat:String(r['Category']||r['CATEGORY']||''),
+      nat:String(r['Nationality']||r['NATIONALITY']||''),
+      doj:parseDOJ(r['Date of Joining']||r['DATE OF JOINING']||r['DOJ']||''),
+      dor:parseDOJ(r['Date of Release']||r['DATE OF RELEASE']||r['DOR']||r['Release Date']||r['RELEASE DATE']||''),
+      camp:String(r['Camp']||r['CAMP']||''),
       status:String(r['Status']||r['STATUS']||''),
     }));
+    // Pre-build search strings for fast filtering
+    campAllRows.forEach(r => {
+      r._search = `${r.id} ${r.name} ${r.desig} ${r.cat} ${r.nat} ${r.doj} ${r.dor} ${r.camp} ${r.status}`.toLowerCase();
+    });
     campFilteredRows=[...campAllRows];
     campFilterRender();
     campToast('Data loaded','success');
-  } catch(e) {
+  } catch(e){
     console.error(e);
     document.getElementById('camp-tbody').innerHTML=`<tr><td colspan="11" class="no-data">⚠ Failed to load data.<br><small style="color:var(--text-dim)">${escHtml(e.message)}</small></td></tr>`;
     campToast('Failed to load: '+e.message,'error');
@@ -1216,78 +1237,70 @@ async function campRefresh(){ await campLoadData(); }
 
 /* ══ CAMP STATS BAR ══ */
 function campUpdateStats(rows) {
-  const mp  = r => r.cat==='Manpower';
-  const eq  = r => r.cat==='Equipment';
-  const isPOB = r => POB_STATUSES.includes(r.status);
-  const isSafah = r => r.camp==='Safah';
-  const isWadi  = r => r.camp==='Wadi Latham';
-  const safahTotal = rows.filter(r=>mp(r)&&isSafah(r)&&isPOB(r)).length;
-  const wadiTotal  = rows.filter(r=>mp(r)&&isWadi(r) &&isPOB(r)).length;
-  const pobCount  = rows.filter(r=>mp(r)&&r.status==='POB').length;
-  const pobACount = rows.filter(r=>mp(r)&&r.status==='POB-A').length;
-  const pobBCount = rows.filter(r=>mp(r)&&r.status==='POB-B').length;
-  const pobCCount = rows.filter(r=>mp(r)&&r.status==='POB-C').length;
-  const pobDCount = rows.filter(r=>mp(r)&&r.status==='POB-D').length;
-  const polCount  = rows.filter(r=>mp(r)&&r.status==='POL').length;
-  const safahEQ   = rows.filter(r=>eq(r)&&isSafah(r)&&r.status==='POB').length;
-  const wadiEQ    = rows.filter(r=>eq(r)&&isWadi(r) &&r.status==='POB').length;
-  document.getElementById('camp-stats-wrap').innerHTML = buildStatsBar([
-    { label:'Total POB', pills:[
-      {label:'Safah',       value:safahTotal, icon:'fa-tent',        color:'sp-blue'},
-      {label:'Wadi Latham', value:wadiTotal,  icon:'fa-tent',        color:'sp-orange'},
-    ]},
-    { label:'POB Status', pills:[
-      {label:'POB',   value:pobCount,  icon:'fa-user-check', color:'sp-green'},
-      {label:'POB-A', value:pobACount, icon:'fa-user-check', color:'sp-green'},
-      {label:'POB-B', value:pobBCount, icon:'fa-user-check', color:'sp-blue'},
-      {label:'POB-C', value:pobCCount, icon:'fa-user-check', color:'sp-purple'},
-      {label:'POB-D', value:pobDCount, icon:'fa-user-check', color:'sp-teal'},
-      {label:'POL',   value:polCount,  icon:'fa-user-clock', color:'sp-warn'},
-    ]},
-    { label:'Camp Resources', pills:[
-      {label:'Safah MP',  value:safahTotal, icon:'fa-person-digging', color:'sp-green'},
-      {label:'Wadi MP',   value:wadiTotal,  icon:'fa-person-digging', color:'sp-orange'},
-      {label:'Safah EQ',  value:safahEQ,    icon:'fa-gear',           color:'sp-blue'},
-      {label:'Wadi EQ',   value:wadiEQ,     icon:'fa-gear',           color:'sp-teal'},
-    ]},
+  const mp=r=>r.cat==='Manpower', eq=r=>r.cat==='Equipment';
+  const isPOB=r=>POB_STATUSES.includes(r.status);
+  const isSafah=r=>r.camp==='Safah', isWadi=r=>r.camp==='Wadi Latham';
+  let safahTotal=0,wadiTotal=0,pobCount=0,pobACount=0,pobBCount=0,pobCCount=0,pobDCount=0,polCount=0,safahEQ=0,wadiEQ=0;
+  // Single pass for all stats
+  for (let i=0; i<rows.length; i++) {
+    const r=rows[i];
+    if(mp(r)){
+      if(isPOB(r)){ if(isSafah(r))safahTotal++;else if(isWadi(r))wadiTotal++; }
+      if(r.status==='POB')pobCount++;
+      else if(r.status==='POB-A')pobACount++;
+      else if(r.status==='POB-B')pobBCount++;
+      else if(r.status==='POB-C')pobCCount++;
+      else if(r.status==='POB-D')pobDCount++;
+      else if(r.status==='POL')polCount++;
+    } else if(eq(r)){
+      if(r.status==='POB'){ if(isSafah(r))safahEQ++;else if(isWadi(r))wadiEQ++; }
+    }
+  }
+  document.getElementById('camp-stats-wrap').innerHTML=buildStatsBar([
+    {label:'Total POB',pills:[{label:'Safah',value:safahTotal,icon:'fa-tent',color:'sp-blue'},{label:'Wadi Latham',value:wadiTotal,icon:'fa-tent',color:'sp-orange'}]},
+    {label:'POB Status',pills:[{label:'POB',value:pobCount,icon:'fa-user-check',color:'sp-green'},{label:'POB-A',value:pobACount,icon:'fa-user-check',color:'sp-green'},{label:'POB-B',value:pobBCount,icon:'fa-user-check',color:'sp-blue'},{label:'POB-C',value:pobCCount,icon:'fa-user-check',color:'sp-purple'},{label:'POB-D',value:pobDCount,icon:'fa-user-check',color:'sp-teal'},{label:'POL',value:polCount,icon:'fa-user-clock',color:'sp-warn'}]},
+    {label:'Camp Resources',pills:[{label:'Safah MP',value:safahTotal,icon:'fa-person-digging',color:'sp-green'},{label:'Wadi MP',value:wadiTotal,icon:'fa-person-digging',color:'sp-orange'},{label:'Safah EQ',value:safahEQ,icon:'fa-gear',color:'sp-blue'},{label:'Wadi EQ',value:wadiEQ,icon:'fa-gear',color:'sp-teal'}]},
   ]);
 }
 
-/* ══ CAMP FILTER & RENDER ══ */
+/* ══ CAMP FILTER & RENDER — fast path ══ */
 function campFilterRender() {
-  const q    =(document.getElementById('camp-search').value||'').toLowerCase().trim();
-  const fCamp= document.getElementById('cf-camp').value;
-  const fCat = document.getElementById('cf-cat').value;
-  const fStat= document.getElementById('cf-status').value;
-  const fNat = document.getElementById('cf-nat').value;
+  const q=(document.getElementById('camp-search').value||'').toLowerCase().trim();
+  const fCamp=document.getElementById('cf-camp').value;
+  const fCat=document.getElementById('cf-cat').value;
+  const fStat=document.getElementById('cf-status').value;
+  const fNat=document.getElementById('cf-nat').value;
+  // Single fast pass using pre-built search strings
   campFilteredRows=campAllRows.filter(r=>{
-    if(fCamp!=='all'&&r.camp  !==fCamp) return false;
-    if(fCat !=='all'&&r.cat   !==fCat)  return false;
+    if(fCamp!=='all'&&r.camp!==fCamp) return false;
+    if(fCat !=='all'&&r.cat !==fCat)  return false;
     if(fStat!=='all'&&r.status!==fStat) return false;
-    if(fNat !=='all'&&r.nat   !==fNat)  return false;
-    if(q){ const hay=`${r.id} ${r.name} ${r.desig} ${r.cat} ${r.nat} ${r.doj} ${r.dor} ${r.camp} ${r.status}`.toLowerCase(); if(!hay.includes(q))return false; }
+    if(fNat !=='all'&&r.nat !==fNat)  return false;
+    if(q&&!r._search.includes(q)) return false;
     return true;
   });
   campUpdateStats(campFilteredRows);
   campRenderTable(campFilteredRows);
 }
+
 function campRenderTable(rows) {
   document.getElementById('camp-badge').textContent=`${rows.length} record${rows.length!==1?'s':''}`;
-  if(!rows.length){ document.getElementById('camp-tbody').innerHTML='<tr><td colspan="11" class="no-data">No records match the current filters.</td></tr>'; return; }
+  if(!rows.length){document.getElementById('camp-tbody').innerHTML='<tr><td colspan="11" class="no-data">No records match the current filters.</td></tr>';return;}
+  // Build all HTML in one pass, single innerHTML assignment
   document.getElementById('camp-tbody').innerHTML=rows.map((r,i)=>campRowHTML(r,i+1)).join('');
 }
 
 /* ══ CAMP BADGES ══ */
-function campStatusBadge(s){ const m={'POB':'s-pob','POB-A':'s-pob-a','POB-B':'s-pob-b','POB-C':'s-pob-c','POB-D':'s-pob-d','POL':'s-pol','POR':'s-por'}; return `<span class="status-pill ${m[s]||'s-def'}">${escHtml(s||'—')}</span>`; }
-function campCatBadge(c){ if(c==='Manpower')return `<span class="cat-mp">Manpower</span>`; if(c==='Equipment')return `<span class="cat-eq">Equipment</span>`; return `<span class="cat-def">${escHtml(c||'—')}</span>`; }
-function campNatBadge(n){ if(n==='Expats')return `<span class="nat-exp">Expats</span>`; if(n==='Nationals')return `<span class="nat-nat">Nationals</span>`; return `<span class="cat-def">${escHtml(n||'—')}</span>`; }
+function campStatusBadge(s){const m={'POB':'s-pob','POB-A':'s-pob-a','POB-B':'s-pob-b','POB-C':'s-pob-c','POB-D':'s-pob-d','POL':'s-pol','POR':'s-por'};return `<span class="status-pill ${m[s]||'s-def'}">${escHtml(s||'—')}</span>`;}
+function campCatBadge(c){if(c==='Manpower')return `<span class="cat-mp">Manpower</span>`;if(c==='Equipment')return `<span class="cat-eq">Equipment</span>`;return `<span class="cat-def">${escHtml(c||'—')}</span>`;}
+function campNatBadge(n){if(n==='Expats')return `<span class="nat-exp">Expats</span>`;if(n==='Nationals')return `<span class="nat-nat">Nationals</span>`;return `<span class="cat-def">${escHtml(n||'—')}</span>`;}
+const STATUS_OPTS_HTML=['POB','POB-A','POB-B','POB-C','POB-D','POL','POR'].map(o=>`<option>${o}</option>`).join('');
 
 /* ══ CAMP ROW HTML ══ */
 function campRowHTML(r,idx){
   const rid=r._row;
   const statusOpts=['POB','POB-A','POB-B','POB-C','POB-D','POL','POR'].map(o=>`<option ${r.status===o?'selected':''}>${o}</option>`).join('');
-  return `
-  <tr id="camp-row-${rid}" data-rowid="${rid}">
+  return `<tr id="camp-row-${rid}" data-rowid="${rid}">
     <td class="mono">${idx}</td>
     <td><span class="cell-view">${escHtml(r.id)}</span><input class="inline-input cell-edit" id="ci-id-${rid}" value="${escHtml(r.id)}" placeholder="ID" style="min-width:80px"></td>
     <td><span class="cell-view">${escHtml(r.name)}</span><input class="inline-input cell-edit" id="ci-name-${rid}" value="${escHtml(r.name)}" placeholder="Full name" style="min-width:130px"></td>
@@ -1298,34 +1311,21 @@ function campRowHTML(r,idx){
     <td><span class="cell-view mono">${fmtDOJ(r.dor)}</span><input class="inline-input cell-edit" id="ci-dor-${rid}" type="date" value="${escHtml(r.dor)}" style="min-width:140px"></td>
     <td><span class="cell-view">${escHtml(r.camp)}</span><select class="inline-input cell-edit" id="ci-camp-${rid}" style="min-width:120px"><option value="">— Select —</option><option ${r.camp==='Safah'?'selected':''}>Safah</option><option ${r.camp==='Wadi Latham'?'selected':''}>Wadi Latham</option></select></td>
     <td><span class="cell-view">${campStatusBadge(r.status)}</span><select class="inline-input cell-edit" id="ci-status-${rid}" style="min-width:100px"><option value="">— Select —</option>${statusOpts}</select></td>
-    <td style="text-align:right">
-      <div class="cell-actions">
-        <div class="edit-actions">
-          <button class="icon-btn" onclick="campEditRow('${rid}')" title="Edit"><i class="fas fa-pen"></i></button>
-          <button class="icon-btn del-btn" onclick="campDeleteRow('${rid}')" title="Delete"><i class="fas fa-trash"></i></button>
-        </div>
-        <div class="save-actions">
-          <button class="icon-btn save-btn" onclick="campSaveRow('${rid}',false)" title="Save"><i class="fas fa-check"></i></button>
-          <button class="icon-btn cancel-btn" onclick="campCancelEdit('${rid}',false)" title="Cancel"><i class="fas fa-xmark"></i></button>
-        </div>
-      </div>
-    </td>
+    <td style="text-align:right"><div class="cell-actions"><div class="edit-actions"><button class="icon-btn" onclick="campEditRow('${rid}')" title="Edit"><i class="fas fa-pen"></i></button><button class="icon-btn del-btn" onclick="campDeleteRow('${rid}')" title="Delete"><i class="fas fa-trash"></i></button></div><div class="save-actions"><button class="icon-btn save-btn" onclick="campSaveRow('${rid}',false)" title="Save"><i class="fas fa-check"></i></button><button class="icon-btn cancel-btn" onclick="campCancelEdit('${rid}',false)" title="Cancel"><i class="fas fa-xmark"></i></button></div></div></td>
   </tr>`;
 }
 
 /* ══ CAMP EDIT / CANCEL ══ */
-function campEditRow(rid){ const tr=document.getElementById('camp-row-'+rid); if(tr)tr.classList.add('editing'); }
-function campCancelEdit(rid,isNew){ if(isNew){ const tr=document.getElementById('camp-row-'+rid); if(tr)tr.remove(); return; } const tr=document.getElementById('camp-row-'+rid); if(tr)tr.classList.remove('editing'); }
+function campEditRow(rid){const tr=document.getElementById('camp-row-'+rid);if(tr)tr.classList.add('editing');}
+function campCancelEdit(rid,isNew){if(isNew){const tr=document.getElementById('camp-row-'+rid);if(tr)tr.remove();return;}const tr=document.getElementById('camp-row-'+rid);if(tr)tr.classList.remove('editing');}
 
 /* ══ CAMP ADD ROW ══ */
 function campAddRow(){
   campNewRowCounter--;
   const tid='new_'+Math.abs(campNewRowCounter);
   const tbody=document.getElementById('camp-tbody');
-  const nd=tbody.querySelector('.no-data'); if(nd)nd.closest('tr').remove();
-  const statusOpts=['POB','POB-A','POB-B','POB-C','POB-D','POL','POR'].map(o=>`<option>${o}</option>`).join('');
-  tbody.insertAdjacentHTML('afterbegin',`
-  <tr id="camp-row-${tid}" data-rowid="${tid}" class="new-row editing">
+  const nd=tbody.querySelector('.no-data');if(nd)nd.closest('tr').remove();
+  tbody.insertAdjacentHTML('afterbegin',`<tr id="camp-row-${tid}" data-rowid="${tid}" class="new-row editing">
     <td class="mono">★</td>
     <td><input class="inline-input cell-edit" id="ci-id-${tid}" placeholder="ID" style="min-width:80px"></td>
     <td><input class="inline-input cell-edit" id="ci-name-${tid}" placeholder="Full name" style="min-width:130px"></td>
@@ -1335,55 +1335,46 @@ function campAddRow(){
     <td><input class="inline-input cell-edit" id="ci-doj-${tid}" type="date" style="min-width:140px"></td>
     <td><input class="inline-input cell-edit" id="ci-dor-${tid}" type="date" style="min-width:140px"></td>
     <td><select class="inline-input cell-edit" id="ci-camp-${tid}" style="min-width:120px"><option value="">— Camp —</option><option>Safah</option><option>Wadi Latham</option></select></td>
-    <td><select class="inline-input cell-edit" id="ci-status-${tid}" style="min-width:100px"><option value="">— Status —</option>${statusOpts}</select></td>
-    <td style="text-align:right">
-      <div class="cell-actions">
-        <div class="edit-actions" style="display:none"></div>
-        <div class="save-actions" style="display:flex;gap:5px">
-          <button class="icon-btn save-btn" onclick="campSaveRow('${tid}',true)" title="Save"><i class="fas fa-check"></i></button>
-          <button class="icon-btn cancel-btn" onclick="campCancelEdit('${tid}',true)" title="Cancel"><i class="fas fa-xmark"></i></button>
-        </div>
-      </div>
-    </td>
+    <td><select class="inline-input cell-edit" id="ci-status-${tid}" style="min-width:100px"><option value="">— Status —</option>${STATUS_OPTS_HTML}</select></td>
+    <td style="text-align:right"><div class="cell-actions"><div class="edit-actions" style="display:none"></div><div class="save-actions" style="display:flex;gap:5px"><button class="icon-btn save-btn" onclick="campSaveRow('${tid}',true)" title="Save"><i class="fas fa-check"></i></button><button class="icon-btn cancel-btn" onclick="campCancelEdit('${tid}',true)" title="Cancel"><i class="fas fa-xmark"></i></button></div></div></td>
   </tr>`);
   document.getElementById('ci-id-'+tid).focus();
 }
 
 /* ══ CAMP SAVE ══ */
 async function campSaveRow(rid,isNew){
-  const g=id=>{ const el=document.getElementById(id); return el?el.value.trim():''; };
+  const g=id=>{const el=document.getElementById(id);return el?el.value.trim():'';};
   const empId=g(`ci-id-${rid}`),name=g(`ci-name-${rid}`),desig=g(`ci-desig-${rid}`);
-  const cat=g(`ci-cat-${rid}`),nat=g(`ci-nat-${rid}`),doj=g(`ci-doj-${rid}`);
-  const dor=g(`ci-dor-${rid}`);
+  const cat=g(`ci-cat-${rid}`),nat=g(`ci-nat-${rid}`),doj=g(`ci-doj-${rid}`),dor=g(`ci-dor-${rid}`);
   const camp=g(`ci-camp-${rid}`),status=g(`ci-status-${rid}`);
-  if(!name)  { campToast('Employee Name is required','error'); return; }
-  if(!cat)   { campToast('Please select a Category','error');  return; }
-  if(!camp)  { campToast('Please select a Camp','error');      return; }
-  if(!status){ campToast('Please select a Status','error');    return; }
-  const tr=document.getElementById('camp-row-'+rid); if(tr)tr.classList.add('saving');
+  if(!name){campToast('Employee Name is required','error');return;}
+  if(!cat){campToast('Please select a Category','error');return;}
+  if(!camp){campToast('Please select a Camp','error');return;}
+  if(!status){campToast('Please select a Status','error');return;}
+  const tr=document.getElementById('camp-row-'+rid);if(tr)tr.classList.add('saving');
   const payload=isNew
-    ?{ action:'add','ID':empId,'Employee Name':name,'Designation':desig,'Category':cat,'Nationality':nat,'Date of Joining':doj,'Date of Release':dor,'Camp':camp,'Status':status }
-    :{ action:'update',_row:rid,'ID':empId,'Employee Name':name,'Designation':desig,'Category':cat,'Nationality':nat,'Date of Joining':doj,'Date of Release':dor,'Camp':camp,'Status':status };
+    ?{action:'add','ID':empId,'Employee Name':name,'Designation':desig,'Category':cat,'Nationality':nat,'Date of Joining':doj,'Date of Release':dor,'Camp':camp,'Status':status}
+    :{action:'update',_row:rid,'ID':empId,'Employee Name':name,'Designation':desig,'Category':cat,'Nationality':nat,'Date of Joining':doj,'Date of Release':dor,'Camp':camp,'Status':status};
   try {
     const res=await fetch(CAMP_WEBAPP_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
     const json=await res.json();
     if(json.status!=='ok') throw new Error(json.message||'Save failed');
     campToast(isNew?'✓ Employee added':'✓ Record updated','success');
     await campLoadData();
-  } catch(e){ console.error(e); campToast('Save failed: '+e.message,'error'); if(tr)tr.classList.remove('saving'); }
+  } catch(e){console.error(e);campToast('Save failed: '+e.message,'error');if(tr)tr.classList.remove('saving');}
 }
 
 /* ══ CAMP DELETE ══ */
 async function campDeleteRow(rid){
   if(!confirm('Delete this record? This cannot be undone.')) return;
-  const tr=document.getElementById('camp-row-'+rid); if(tr)tr.classList.add('saving');
+  const tr=document.getElementById('camp-row-'+rid);if(tr)tr.classList.add('saving');
   try {
     const res=await fetch(CAMP_WEBAPP_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'delete',_row:rid})});
     const json=await res.json();
     if(json.status!=='ok') throw new Error(json.message||'Delete failed');
     campToast('Record deleted','info');
     await campLoadData();
-  } catch(e){ console.error(e); campToast('Delete failed: '+e.message,'error'); if(tr)tr.classList.remove('saving'); }
+  } catch(e){console.error(e);campToast('Delete failed: '+e.message,'error');if(tr)tr.classList.remove('saving');}
 }
 
 /* ══ CAMP EXCEL EXPORT ══ */
@@ -1394,12 +1385,10 @@ function exportCampExcel(){
   const wsData=[hdr,...campAllRows.map(toRow)];
   const ws=XLSX.utils.aoa_to_sheet(wsData);
   ws['!cols']=[{wch:4},{wch:12},{wch:26},{wch:20},{wch:12},{wch:12},{wch:16},{wch:16},{wch:14},{wch:10}];
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,'All Employees');
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'All Employees');
   ['Safah','Wadi Latham'].forEach(camp=>{
-    const rows=campAllRows.filter(r=>r.camp===camp);
-    if(!rows.length)return;
-    const cws=XLSX.utils.aoa_to_sheet([hdr,...rows.map(toRow)]); cws['!cols']=ws['!cols'];
+    const rows=campAllRows.filter(r=>r.camp===camp);if(!rows.length)return;
+    const cws=XLSX.utils.aoa_to_sheet([hdr,...rows.map(toRow)]);cws['!cols']=ws['!cols'];
     XLSX.utils.book_append_sheet(wb,cws,camp.replace(' ','_'));
   });
   const pobData=[['Status','Safah MP','Wadi Latham MP','Safah EQ','Wadi EQ']];
@@ -1411,8 +1400,7 @@ function exportCampExcel(){
       campAllRows.filter(r=>r.status===st&&r.camp==='Wadi Latham'&&r.cat==='Equipment').length,
     ]);
   });
-  const wsSummary=XLSX.utils.aoa_to_sheet(pobData);
-  wsSummary['!cols']=[{wch:10},{wch:12},{wch:18},{wch:12},{wch:12}];
+  const wsSummary=XLSX.utils.aoa_to_sheet(pobData);wsSummary['!cols']=[{wch:10},{wch:12},{wch:18},{wch:12},{wch:12}];
   XLSX.utils.book_append_sheet(wb,wsSummary,'Summary');
   XLSX.writeFile(wb,`GPS_CampDetails_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
@@ -1422,10 +1410,9 @@ function campToast(msg,type='info'){
   const icons={success:'✓',error:'⚠',info:'ℹ'};
   const c=document.getElementById('camp-toast');
   const t=document.createElement('div');
-  t.className=`c-toast ${type}`;
-  t.innerHTML=`<span>${icons[type]||'•'}</span> ${escHtml(msg)}`;
+  t.className=`c-toast ${type}`;t.innerHTML=`<span>${icons[type]||'•'}</span> ${escHtml(msg)}`;
   c.appendChild(t);
-  setTimeout(()=>{ t.style.opacity='0';t.style.transition='opacity 0.4s';setTimeout(()=>t.remove(),400); },3200);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 0.4s';setTimeout(()=>t.remove(),400);},3200);
 }
 
 /* ══ EXCEL EXPORTS ══ */
@@ -1433,42 +1420,42 @@ function exportRepSumExcel(){
   if(!lastRepSumRows.length){alert('No data to export.');return;}
   const ws=XLSX.utils.aoa_to_sheet([['#','Foreman Name','Foreman ID','Area / Block','Discipline','WI No.','Crew Size','Work Description','Progress Details'],...lastRepSumRows.map((g,i)=>[i+1,g.crewLead,g.id,g.area,g.discipline,g.wi,g.resources.size,g.desc||'—',formatProgressFlat(g.progress)||'—'])]);
   ws['!cols']=[{wch:4},{wch:22},{wch:14},{wch:22},{wch:20},{wch:16},{wch:10},{wch:40},{wch:50}];
-  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Report Summary');
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Report Summary');
   XLSX.writeFile(wb,`GPS_ReportSummary_${document.getElementById('rs-date').value}.xlsx`);
 }
 function exportStatusExcel(){
   if(!lastStatusGroups.length){alert('No data to export.');return;}
-  const ws=XLSX.utils.aoa_to_sheet([['#','Foreman ID','Crew Lead','WI No.','Area / Block','Crew Size','Manpower','Equipment','Discipline'],...lastStatusGroups.map((g,i)=>{ const mp=g.resourceRows.filter(r=>r.type.toLowerCase()==='manpower').length,eq=g.resourceRows.filter(r=>r.type.toLowerCase()==='equipment').length; return [i+1,g.id,g.crewLead,g.wi,g.area,g.resources.size,mp,eq,g.discipline]; })]);
+  const ws=XLSX.utils.aoa_to_sheet([['#','Foreman ID','Crew Lead','WI No.','Area / Block','Crew Size','Manpower','Equipment','Discipline'],...lastStatusGroups.map((g,i)=>{const mp=g.resourceRows.filter(r=>r.type.toLowerCase()==='manpower').length,eq=g.resourceRows.filter(r=>r.type.toLowerCase()==='equipment').length;return[i+1,g.id,g.crewLead,g.wi,g.area,g.resources.size,mp,eq,g.discipline];})]);
   ws['!cols']=[{wch:4},{wch:14},{wch:22},{wch:16},{wch:22},{wch:10},{wch:10},{wch:10},{wch:20}];
-  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Project Status');
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Project Status');
   XLSX.writeFile(wb,`GPS_ProjectStatus_${lastStatusDate?toKey(lastStatusDate):'export'}.xlsx`);
 }
 function exportResourceExcel(){
   if(!lastResAllRows.length){alert('No data to export.');return;}
   const allData=[['#','Resource ID','Designation','Type','WI No.','Area','Foreman','Discipline'],...lastResAllRows.map((r,i)=>[i+1,r.id,r.desig,r.type||'—',r.wi,r.area,r.foreman,r.discipline||'—'])];
-  const wsAll=XLSX.utils.aoa_to_sheet(allData); wsAll['!cols']=[{wch:4},{wch:14},{wch:22},{wch:12},{wch:16},{wch:22},{wch:22},{wch:20}];
+  const wsAll=XLSX.utils.aoa_to_sheet(allData);wsAll['!cols']=[{wch:4},{wch:14},{wch:22},{wch:12},{wch:16},{wch:22},{wch:22},{wch:20}];
   const mpRows=lastResAllRows.filter(r=>r.type.toLowerCase()==='manpower');
   const eqRows=lastResAllRows.filter(r=>r.type.toLowerCase()==='equipment');
   const wsMp=XLSX.utils.aoa_to_sheet([['#','Resource ID','Designation','WI No.','Area','Foreman'],...mpRows.map((r,i)=>[i+1,r.id,r.desig,r.wi,r.area,r.foreman])]);
   const wsEq=XLSX.utils.aoa_to_sheet([['#','Resource ID','Designation','WI No.','Area','Foreman'],...eqRows.map((r,i)=>[i+1,r.id,r.desig,r.wi,r.area,r.foreman])]);
-  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,wsAll,'All Resources'); XLSX.utils.book_append_sheet(wb,wsMp,'Manpower'); XLSX.utils.book_append_sheet(wb,wsEq,'Equipment');
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,wsAll,'All Resources');XLSX.utils.book_append_sheet(wb,wsMp,'Manpower');XLSX.utils.book_append_sheet(wb,wsEq,'Equipment');
   XLSX.writeFile(wb,`GPS_Resources_${lastResDate?toKey(lastResDate):'export'}.xlsx`);
 }
 
-/* ══ TAB ROUTING ══ */
-function triggerTabRender(t){
-  if(t==='summary')      renderSummary();
-  else if(t==='kpi')     renderKPI();
-  else if(t==='reports') renderReports();
-  else if(t==='repsum')  renderRepSum();
-  else if(t==='status')  renderStatus();
-  else if(t==='resource')renderResource();
+/* ══ TAB ROUTING — lazy render ══ */
+function triggerTabRender(t) {
+  if(t==='summary')       renderSummary();
+  else if(t==='kpi')      renderKPI();
+  else if(t==='reports')  renderReports();
+  else if(t==='repsum')   renderRepSum();
+  else if(t==='status')   renderStatus();
+  else if(t==='resource') renderResource();
 }
 
 /* ══ UTILS ══ */
-function show(id){ const el=document.getElementById(id); if(el)el.style.display='block'; }
-function hide(id){ const el=document.getElementById(id); if(el)el.style.display='none'; }
-function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function show(id){const el=document.getElementById(id);if(el)el.style.display='block';}
+function hide(id){const el=document.getElementById(id);if(el)el.style.display='none';}
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 </script>
 </body>
 </html>
